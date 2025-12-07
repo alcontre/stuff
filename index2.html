@@ -27,6 +27,29 @@
             border-right: 1px solid #34495e;
             transition: margin-left 0.3s ease;
             position: relative;
+            min-width: 150px;
+            max-width: 600px;
+        }
+        
+        .sidebar-resize-handle {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            cursor: col-resize;
+            background-color: #34495e;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .sidebar:hover .sidebar-resize-handle {
+            opacity: 1;
+        }
+        
+        .sidebar-resize-handle:hover {
+            background-color: #3498db;
+            opacity: 1;
         }
         
         .sidebar-header {
@@ -302,6 +325,7 @@
 </head>
 <body>
     <div class="sidebar" id="sidebar">
+        <div class="sidebar-resize-handle" id="sidebar-resize-handle"></div>
         <div class="sidebar-header">
             <h2>Navigation</h2>
             <button class="sidebar-toggle" id="sidebar-toggle-btn">☰</button>
@@ -629,6 +653,39 @@
             overlayBtn.addEventListener('click', toggleSidebar);
         }
         
+        // Handle sidebar resize
+        function initSidebarResize() {
+            const sidebar = document.getElementById('sidebar');
+            const resizeHandle = document.getElementById('sidebar-resize-handle');
+            let isResizing = false;
+            let startX = 0;
+            let startWidth = 0;
+            
+            resizeHandle.addEventListener('mousedown', function(e) {
+                isResizing = true;
+                startX = e.clientX;
+                startWidth = sidebar.offsetWidth;
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+            });
+            
+            document.addEventListener('mousemove', function(e) {
+                if (!isResizing) return;
+                
+                const delta = e.clientX - startX;
+                const newWidth = Math.max(150, Math.min(600, startWidth + delta));
+                sidebar.style.width = newWidth + 'px';
+            });
+            
+            document.addEventListener('mouseup', function() {
+                if (isResizing) {
+                    isResizing = false;
+                    document.body.style.cursor = 'auto';
+                    document.body.style.userSelect = 'auto';
+                }
+            });
+        }
+        
         // Handle all block collapsing
         function initCollapsibleBlocks() {
             const headers = document.querySelectorAll('.block-header');
@@ -744,6 +801,7 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             initSidebarToggle();
+            initSidebarResize();
             initCollapsibleBlocks();
             generateNavigation();
         });
