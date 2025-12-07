@@ -751,40 +751,68 @@
         function initScrollTracking() {
             const mainContent = document.querySelector('.main-content');
             const navLinks = document.querySelectorAll('.sidebar a');
-            
-            function updateActiveLink() {
-                let activeBlockId = null;
-                
-                // Find which block is most visible
-                const blockHeaders = document.querySelectorAll('.block-header');
-                let maxVisibleHeight = 0;
-                
-                blockHeaders.forEach(header => {
-                    const rect = header.getBoundingClientRect();
-                    const contentId = header.dataset.block + '-content';
-                    
-                    // Check if this block is in viewport
-                    if (rect.top < mainContent.clientHeight && rect.bottom > 0) {
-                        const visibleHeight = Math.min(rect.bottom, mainContent.clientHeight) - Math.max(rect.top, 0);
-                        if (visibleHeight > maxVisibleHeight) {
-                            maxVisibleHeight = visibleHeight;
-                            activeBlockId = header.dataset.block;
-                        }
+            const headers = Array.from(document.querySelectorAll('.block-header'));
+            // Return true if the element is inside any collapsed `.block-content`
+            function isInsideCollapsedAncestor(el) {
+                let node = el.parentElement;
+                while (node) {
+                    if (node.classList && node.classList.contains('block-content') && node.classList.contains('collapsed')) {
+                        return true;
                     }
-                });
-                
-                // Update active links
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (activeBlockId && link.href.includes(activeBlockId)) {
-                        link.classList.add('active');
-                    }
-                });
+                    node = node.parentElement;
+                }
+                return false;
             }
-            
-            mainContent.addEventListener('scroll', updateActiveLink);
-            // Also track on page load
-            updateActiveLink();
+
+            function pickTopmostVisible() {
+                const mainRect = mainContent.getBoundingClientRect();
+                let best = null;
+                let bestAbsDist = Infinity;
+
+                headers.forEach(h => {
+                    // Ignore headers that are within a collapsed block-content
+                    if (isInsideCollapsedAncestor(h)) return;
+                    const rect = h.getBoundingClientRect();
+                    const visibleTop = Math.max(rect.top, mainRect.top);
+                    const visibleBottom = Math.min(rect.bottom, mainRect.bottom);
+                    const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+                    if (visibleHeight <= 0) return; // not visible
+
+                    const dist = rect.top - mainRect.top; // distance from root top
+                    const absDist = Math.abs(dist);
+                    if (absDist < bestAbsDist) {
+                        bestAbsDist = absDist;
+                        best = h;
+                    }
+                });
+
+                // clear existing active
+                navLinks.forEach(l => l.classList.remove('active'));
+                if (best && best.id) {
+                    const targetHash = '#' + best.id;
+                    const match = Array.from(navLinks).find(l => l.hash === targetHash || l.getAttribute('href') === targetHash);
+                    if (match) match.classList.add('active');
+                }
+            }
+
+            // Throttle updates using requestAnimationFrame
+            let ticking = false;
+            function onScrollOrResize() {
+                if (!ticking) {
+                    ticking = true;
+                    window.requestAnimationFrame(() => {
+                        pickTopmostVisible();
+                        ticking = false;
+                    });
+                }
+            }
+
+            // Use scroll + resize events for predictable "topmost" behavior
+            mainContent.addEventListener('scroll', onScrollOrResize, { passive: true });
+            window.addEventListener('resize', onScrollOrResize);
+
+            // Run once on load
+            pickTopmostVisible();
         }
         
         // Handle all block collapsing
@@ -808,24 +836,37 @@
         function generateNavigation() {
             const navContainer = document.getElementById('sidebar-nav');
             const nav = document.createElement('ul');
+            let numberingStack = [0]; // Track numbering at each level
             
             // Recursively build navigation tree from nested block structure
             function buildNavTree(parentElement, depth = 0) {
                 const navList = document.createElement('ul');
                 const blockHeaders = parentElement.querySelectorAll(':scope > .block-header');
                 
-                blockHeaders.forEach(header => {
+                blockHeaders.forEach((header, index) => {
+                    // Update numbering
+                    if (depth >= numberingStack.length) {
+                        numberingStack.push(0);
+                    }
+                    numberingStack[depth] = index + 1;
+                    numberingStack.splice(depth + 1); // Remove deeper levels
+                    
+                    const sectionNumber = numberingStack.slice(0, depth + 1).join('.');
                     const text = header.textContent.trim().replace(/^[▼▶]\s*/, '');
-                    const blockId = header.dataset.block;
+                    const blockId = 'section-' + sectionNumber;
+                    
+                    // Update header with section number
+                    header.dataset.sectionNumber = sectionNumber;
+                    header.id = blockId;
                     
                     const navLi = document.createElement('li');
                     const link = document.createElement('a');
-                    link.href = '#' + blockId + '-content';
-                    link.textContent = text;
+                    link.href = '#' + blockId;
+                    link.textContent = sectionNumber + ' ' + text;
                     navLi.appendChild(link);
                     
                     // Check if this block has nested blocks
-                    const contentDiv = document.getElementById(blockId + '-content');
+                    const contentDiv = document.getElementById(header.dataset.block + '-content');
                     if (contentDiv) {
                         const nestedBlockHeaders = contentDiv.querySelectorAll(':scope > .nested-blocks > .block-header');
                         if (nestedBlockHeaders.length > 0) {
@@ -846,23 +887,31 @@
             const mainContent = document.querySelector('.main-content');
             const topLevelBlocks = mainContent.querySelectorAll(':scope > .block-header.top-level');
             
-            topLevelBlocks.forEach(header => {
+            topLevelBlocks.forEach((header, index) => {
+                numberingStack = [index + 1];
+                
+                const sectionNumber = '' + (index + 1);
                 const text = header.textContent.trim().replace(/^[▼▶]\s*/, '');
-                const blockId = header.dataset.block;
+                const blockId = 'section-' + sectionNumber;
+                
+                // Update header with section number
+                header.dataset.sectionNumber = sectionNumber;
+                header.id = blockId;
                 
                 const navLi = document.createElement('li');
                 const link = document.createElement('a');
-                link.href = '#' + blockId + '-content';
-                link.textContent = text;
+                link.href = '#' + blockId;
+                link.textContent = sectionNumber + ' ' + text;
                 navLi.appendChild(link);
                 
                 // Check if this block has nested blocks
-                const contentDiv = document.getElementById(blockId + '-content');
+                const contentDiv = document.getElementById(header.dataset.block + '-content');
                 if (contentDiv) {
                     const nestedBlockHeaders = contentDiv.querySelectorAll(':scope > .nested-blocks > .block-header');
                     if (nestedBlockHeaders.length > 0) {
                         navLi.classList.add('has-nested');
-                        const nestedNav = buildNavTree(contentDiv.querySelector('.nested-blocks'));
+                        numberingStack = [index + 1, 0];
+                        const nestedNav = buildNavTree(contentDiv.querySelector('.nested-blocks'), 1);
                         nestedNav.classList.add('nested');
                         navLi.appendChild(nestedNav);
                     }
