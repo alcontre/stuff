@@ -790,7 +790,44 @@
                 navLinks.forEach(l => l.classList.remove('active'));
                 if (best && best.id) {
                     const targetHash = '#' + best.id;
-                    const match = Array.from(navLinks).find(l => l.hash === targetHash || l.getAttribute('href') === targetHash);
+                    // If the matched link is hidden because its nested UL is collapsed,
+                    // bubble up to the nearest visible ancestor link in the nav.
+                    const navRoot = document.getElementById('sidebar-nav').querySelector('ul');
+
+                    function getVisibleNavLinkForHash(hash) {
+                        const allLinks = Array.from(navLinks);
+                        const direct = allLinks.find(l => l.hash === hash || l.getAttribute('href') === hash);
+                        if (!direct) return null;
+
+                        // Helper: returns true if element is inside any collapsed UL
+                        function isLinkHidden(link) {
+                            let ul = link.closest('ul');
+                            while (ul && ul !== navRoot) {
+                                if (ul.classList && ul.classList.contains('collapsed')) return true;
+                                ul = ul.parentElement ? ul.parentElement.closest('ul') : null;
+                            }
+                            return false;
+                        }
+
+                        if (!isLinkHidden(direct)) return direct;
+
+                        // Bubble up: find the nearest ancestor LI that contains this UL
+                        let currentUl = direct.closest('ul');
+                        while (currentUl && currentUl !== navRoot) {
+                            // The parent LI that owns this UL
+                            const parentLi = currentUl.parentElement;
+                            if (!parentLi) break;
+                            const parentLink = parentLi.querySelector('a');
+                            if (parentLink && !isLinkHidden(parentLink)) return parentLink;
+                            // Move up to the UL that contains this LI
+                            currentUl = parentLi.closest('ul');
+                        }
+
+                        // Fallback: return the top-level first visible link
+                        return allLinks.find(l => !isLinkHidden(l)) || null;
+                    }
+
+                    const match = getVisibleNavLinkForHash(targetHash);
                     if (match) match.classList.add('active');
                 }
             }
