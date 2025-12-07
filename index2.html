@@ -207,6 +207,11 @@
             background-color: #34495e;
         }
         
+        .sidebar a.active {
+            background-color: #3498db;
+            font-weight: 600;
+        }
+        
         .sidebar .nested {
             margin-left: 15px;
             border-left: 1px solid #34495e;
@@ -742,6 +747,46 @@
             });
         }
         
+        // Handle scroll tracking for active section highlighting
+        function initScrollTracking() {
+            const mainContent = document.querySelector('.main-content');
+            const navLinks = document.querySelectorAll('.sidebar a');
+            
+            function updateActiveLink() {
+                let activeBlockId = null;
+                
+                // Find which block is most visible
+                const blockHeaders = document.querySelectorAll('.block-header');
+                let maxVisibleHeight = 0;
+                
+                blockHeaders.forEach(header => {
+                    const rect = header.getBoundingClientRect();
+                    const contentId = header.dataset.block + '-content';
+                    
+                    // Check if this block is in viewport
+                    if (rect.top < mainContent.clientHeight && rect.bottom > 0) {
+                        const visibleHeight = Math.min(rect.bottom, mainContent.clientHeight) - Math.max(rect.top, 0);
+                        if (visibleHeight > maxVisibleHeight) {
+                            maxVisibleHeight = visibleHeight;
+                            activeBlockId = header.dataset.block;
+                        }
+                    }
+                });
+                
+                // Update active links
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (activeBlockId && link.href.includes(activeBlockId)) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            mainContent.addEventListener('scroll', updateActiveLink);
+            // Also track on page load
+            updateActiveLink();
+        }
+        
         // Handle all block collapsing
         function initCollapsibleBlocks() {
             const headers = document.querySelectorAll('.block-header');
@@ -861,6 +906,7 @@
             initExpandCollapseAll();
             initCollapsibleBlocks();
             generateNavigation();
+            initScrollTracking();
         });
     </script>
 </body>
