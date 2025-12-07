@@ -23,7 +23,7 @@
             background-color: #2c3e50;
             color: #ecf0f1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 12px;
             border-right: 1px solid #34495e;
             transition: margin-left 0.3s ease;
             position: relative;
@@ -56,29 +56,55 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
+            gap: 4px;
+        }
+        
+        .sidebar-controls {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .sidebar-control-btn {
+            width: 28px;
+            height: 28px;
+            background-color: transparent;
+            border: 1px solid #34495e;
+            border-radius: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #ecf0f1;
+            transition: background-color 0.2s;
+            padding: 0;
+        }
+        
+        .sidebar-control-btn:hover {
+            background-color: #34495e;
         }
         
         .sidebar h2 {
-            font-size: 14px;
+            font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             margin-bottom: 0;
             color: #bdc3c7;
             flex: 1;
         }
         
         .sidebar-toggle {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             background-color: transparent;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             color: #ecf0f1;
             transition: background-color 0.2s;
         }
@@ -127,7 +153,7 @@
         }
         
         .sidebar li {
-            margin: 8px 0;
+            margin: 4px 0;
             position: relative;
         }
         
@@ -153,9 +179,9 @@
         }
         
         .sidebar .nested {
-            margin-left: 15px;
+            margin-left: 12px;
             border-left: 1px solid #34495e;
-            padding-left: 10px;
+            padding-left: 8px;
             transition: max-height 0.3s ease, opacity 0.2s ease;
             max-height: 1000px;
             opacity: 1;
@@ -170,10 +196,10 @@
         .sidebar a {
             color: #ecf0f1;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12px;
             display: block;
-            padding: 5px 10px;
-            border-radius: 3px;
+            padding: 3px 6px;
+            border-radius: 2px;
             transition: background-color 0.2s;
         }
         
@@ -189,13 +215,14 @@
         
         .main-content {
             flex: 1;
-            padding: 40px;
+            padding: 24px;
             overflow-y: auto;
         }
         
         .main-content h1 {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             color: #2c3e50;
+            font-size: 24px;
         }
         
         .main-content ul {
@@ -217,10 +244,10 @@
         .field-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 15px 0;
+            margin: 10px 0;
             background-color: #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            border-radius: 3px;
             overflow: hidden;
         }
         
@@ -230,17 +257,18 @@
         }
         
         .field-table th {
-            padding: 12px;
+            padding: 8px 10px;
             text-align: left;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
         
         .field-table td {
-            padding: 12px;
+            padding: 8px 10px;
             border-bottom: 1px solid #ecf0f1;
+            font-size: 12px;
         }
         
         .field-table tbody tr:hover {
@@ -253,17 +281,17 @@
         
         .bit-layout {
             font-family: 'Courier New', monospace;
-            font-size: 11px;
+            font-size: 10px;
             background-color: #f5f5f5;
-            padding: 8px;
-            border-radius: 3px;
+            padding: 6px;
+            border-radius: 2px;
             border: 1px solid #ddd;
             white-space: pre;
-            line-height: 1.4;
+            line-height: 1.3;
         }
         
         .field-description {
-            font-size: 13px;
+            font-size: 12px;
             color: #34495e;
         }
         
@@ -272,10 +300,11 @@
             user-select: none;
             display: flex;
             align-items: center;
-            padding: 8px 0;
-            margin: 8px 0;
+            padding: 6px 0;
+            margin: 4px 0;
             font-weight: 600;
             color: #2c3e50;
+            font-size: 13px;
         }
         
         .block-header:hover {
@@ -283,10 +312,10 @@
         }
         
         .block-header.top-level {
-            padding: 12px 0;
-            margin: 20px 0 10px 0;
-            border-bottom: 2px solid #34495e;
-            font-size: 16px;
+            padding: 8px 0;
+            margin: 12px 0 6px 0;
+            border-bottom: 1px solid #34495e;
+            font-size: 14px;
         }
         
         .block-toggle {
@@ -319,7 +348,7 @@
         }
         
         .nested-blocks {
-            margin-left: 20px;
+            margin-left: 14px;
         }
     </style>
 </head>
@@ -328,7 +357,11 @@
         <div class="sidebar-resize-handle" id="sidebar-resize-handle"></div>
         <div class="sidebar-header">
             <h2>Navigation</h2>
-            <button class="sidebar-toggle" id="sidebar-toggle-btn">☰</button>
+            <div class="sidebar-controls">
+                <button class="sidebar-control-btn" id="expand-all-btn" title="Expand all">+</button>
+                <button class="sidebar-control-btn" id="collapse-all-btn" title="Collapse all">−</button>
+                <button class="sidebar-toggle" id="sidebar-toggle-btn">☰</button>
+            </div>
         </div>
         <div id="sidebar-nav"></div>
     </div>
@@ -686,6 +719,29 @@
             });
         }
         
+        // Handle expand/collapse all
+        function initExpandCollapseAll() {
+            const expandBtn = document.getElementById('expand-all-btn');
+            const collapseBtn = document.getElementById('collapse-all-btn');
+            const navContainer = document.getElementById('sidebar-nav');
+            
+            expandBtn.addEventListener('click', function() {
+                navContainer.querySelectorAll('ul.nested.collapsed').forEach(ul => {
+                    ul.classList.remove('collapsed');
+                    const toggle = ul.parentElement.querySelector('.nav-toggle');
+                    if (toggle) toggle.classList.remove('collapsed');
+                });
+            });
+            
+            collapseBtn.addEventListener('click', function() {
+                navContainer.querySelectorAll('ul.nested:not(.collapsed)').forEach(ul => {
+                    ul.classList.add('collapsed');
+                    const toggle = ul.parentElement.querySelector('.nav-toggle');
+                    if (toggle) toggle.classList.add('collapsed');
+                });
+            });
+        }
+        
         // Handle all block collapsing
         function initCollapsibleBlocks() {
             const headers = document.querySelectorAll('.block-header');
@@ -802,6 +858,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             initSidebarToggle();
             initSidebarResize();
+            initExpandCollapseAll();
             initCollapsibleBlocks();
             generateNavigation();
         });
