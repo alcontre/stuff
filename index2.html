@@ -889,17 +889,13 @@
 
                 const strongEl = header.querySelector('strong');
                 if (strongEl) {
-                    // Always derive a clean label on each run (idempotent)
-                    const clone = strongEl.cloneNode(true);
-                    clone.querySelectorAll('.section-number').forEach(n => n.remove());
-                    const raw = clone.textContent || '';
-                    const cleanLabel = (labelText || raw)
-                        .replace(/^[\d.]+\s+/, '')
-                        .replace(/^[▼▶]\s*/, '')
-                        .trim();
-
-                    // Remove any existing number spans within this header before re-inserting
-                    header.querySelectorAll('.section-number').forEach(n => n.remove());
+                    if (!strongEl.dataset.originalLabel) {
+                        strongEl.dataset.originalLabel = (strongEl.textContent || '')
+                            .replace(/^[\d.]+\s+/, '')
+                            .replace(/^[▼▶]\s*/, '')
+                            .trim();
+                    }
+                    const cleanLabel = (labelText || strongEl.dataset.originalLabel || '').trim();
 
                     // Insert number span before the strong label; keep label number-free
                     const numSpan = document.createElement('span');
