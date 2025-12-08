@@ -890,10 +890,7 @@
                 const strongEl = header.querySelector('strong');
                 if (strongEl) {
                     if (!strongEl.dataset.originalLabel) {
-                        strongEl.dataset.originalLabel = (strongEl.textContent || '')
-                            .replace(/^[\d.]+\s+/, '')
-                            .replace(/^[▼▶]\s*/, '')
-                            .trim();
+                        strongEl.dataset.originalLabel = (strongEl.textContent || '').trim();
                     }
                     const cleanLabel = (labelText || strongEl.dataset.originalLabel || '').trim();
 
@@ -921,8 +918,9 @@
                     numberingStack.splice(depth + 1); // Remove deeper levels
 
                     const sectionNumber = numberingStack.slice(0, depth + 1).join('.');
-                    const rawText = (header.querySelector('strong')?.dataset.originalLabel || header.textContent).trim();
-                    const text = rawText.replace(/^[\d.]+\s+/, '').replace(/^[▼▶]\s*/, '');
+                    const text = (header.querySelector('strong')?.dataset.originalLabel
+                        || header.querySelector('strong')?.textContent
+                        || header.textContent).trim();
                     const blockId = 'section-' + sectionNumber;
 
                     applySectionNumber(header, sectionNumber, blockId, text);
@@ -960,8 +958,9 @@
                 numberingStack = [index + 1];
 
                 const sectionNumber = '' + (index + 1);
-                const rawText = (header.querySelector('strong')?.dataset.originalLabel || header.textContent).trim();
-                const text = rawText.replace(/^[\d.]+\s+/, '').replace(/^[▼▶]\s*/, '');
+                const text = (header.querySelector('strong')?.dataset.originalLabel
+                    || header.querySelector('strong')?.textContent
+                    || header.textContent).trim();
                 const blockId = 'section-' + sectionNumber;
                 
                 applySectionNumber(header, sectionNumber, blockId, text);
