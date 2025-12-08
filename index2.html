@@ -993,18 +993,16 @@
                 header.dataset.sectionNumber = sectionNumber;
                 header.id = blockId;
 
+                // We expect each header to contain a <strong>
                 const strongEl = header.querySelector('strong');
-                if (strongEl) {
-                    const cleanLabel = (labelText || strongEl.textContent || '').trim();
+                const cleanLabel = (labelText || strongEl.textContent || '').trim();
 
-                    // Insert number span before the strong label; keep label number-free
-                    const numSpan = document.createElement('span');
-                    numSpan.className = 'section-number';
-                    numSpan.textContent = sectionNumber;
+                const numSpan = document.createElement('span');
+                numSpan.className = 'section-number';
+                numSpan.textContent = sectionNumber;
 
-                    strongEl.textContent = cleanLabel;
-                    header.insertBefore(numSpan, strongEl);
-                }
+                strongEl.textContent = cleanLabel;
+                header.insertBefore(numSpan, strongEl);
             }
 
             // Recursively build navigation tree from nested block structure
@@ -1021,8 +1019,7 @@
                     numberingStack.splice(depth + 1); // Remove deeper levels
 
                     const sectionNumber = numberingStack.slice(0, depth + 1).join('.');
-                    const strong = header.querySelector('strong');
-                    const text = (strong?.textContent || '').trim();
+                    const text = header.querySelector('strong').textContent.trim();
                     const blockId = 'section-' + sectionNumber;
 
                     applySectionNumber(header, sectionNumber, blockId, text);
@@ -1060,8 +1057,7 @@
                 numberingStack = [index + 1];
 
                 const sectionNumber = '' + (index + 1);
-                const strong = header.querySelector('strong');
-                const text = (strong?.textContent || '').trim();
+                const text = header.querySelector('strong').textContent.trim();
                 const blockId = 'section-' + sectionNumber;
 
                 applySectionNumber(header, sectionNumber, blockId, text);
