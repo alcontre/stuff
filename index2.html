@@ -410,6 +410,34 @@
                 </tbody>
             </table>
             <div class="nested-blocks">
+                <!-- myblock -->
+                <div class="block-header">
+                    <span class="block-toggle">▼</span>
+                    <strong>Block: Magic Number</strong>
+                </div>
+                <div class="block-content">
+                    <table class="field-table">
+                        <thead>
+                            <tr>
+                                <th>Bit Layout</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="bit-layout">[Magic Number Block: 4B]</div>
+                                </td>
+                                <td>
+                                    <div class="field-description">Fixed identifier that guards the file and enables
+                                        format sniffing before deeper parsing.</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="nested-blocks">
+                    </div>
+                </div>
                 <!-- Block: Magic Number -->
                 <div class="block-header">
                     <span class="block-toggle">▼</span>
@@ -1426,72 +1454,75 @@
                 return false;
             }
 
-            function pickTopmostVisible() {
+            // Calculate header offset relative to the scroll container so we can
+            // keep highlighting even when the header is off-screen.
+            function getHeaderOffset(header) {
+                const headerRect = header.getBoundingClientRect();
                 const mainRect = mainContent.getBoundingClientRect();
-                let best = null;
-                let bestAbsDist = Infinity;
+                return headerRect.top - mainRect.top + mainContent.scrollTop;
+            }
 
-                headers.forEach(h => {
-                    // Ignore headers that are within a collapsed block-content
-                    if (isInsideCollapsedAncestor(h)) return;
-                    const rect = h.getBoundingClientRect();
-                    const visibleTop = Math.max(rect.top, mainRect.top);
-                    const visibleBottom = Math.min(rect.bottom, mainRect.bottom);
-                    const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-                    if (visibleHeight <= 0) return; // not visible
+            function findActiveHeader() {
+                const scrollTop = mainContent.scrollTop;
+                let bestAbove = null;
+                let bestBelow = null;
 
-                    const dist = rect.top - mainRect.top; // distance from root top
-                    const absDist = Math.abs(dist);
-                    if (absDist < bestAbsDist) {
-                        bestAbsDist = absDist;
-                        best = h;
+                headers.forEach(header => {
+                    if (!header.id || isInsideCollapsedAncestor(header)) return;
+                    const offset = getHeaderOffset(header);
+
+                    if (offset <= scrollTop + 1) {
+                        if (!bestAbove || offset > bestAbove.offset) {
+                            bestAbove = { header, offset };
+                        }
+                    } else {
+                        if (!bestBelow || offset < bestBelow.offset) {
+                            bestBelow = { header, offset };
+                        }
                     }
                 });
 
-                // clear existing active
-                navLinks.forEach(l => l.classList.remove('active'));
-                if (best && best.id) {
-                    const targetHash = '#' + best.id;
-                    // If the matched link is hidden because its nested UL is collapsed,
-                    // bubble up to the nearest visible ancestor link in the nav.
-                    const navRoot = document.getElementById('sidebar-nav').querySelector('ul');
+                return bestAbove ? bestAbove.header : (bestBelow ? bestBelow.header : null);
+            }
 
-                    function getVisibleNavLinkForHash(hash) {
-                        const allLinks = Array.from(navLinks);
-                        const direct = allLinks.find(l => l.hash === hash || l.getAttribute('href') === hash);
-                        if (!direct) return null;
+            const navWrapper = document.getElementById('sidebar-nav');
+            const navRoot = navWrapper ? navWrapper.querySelector('ul') : null;
 
-                        // Helper: returns true if element is inside any collapsed UL
-                        function isLinkHidden(link) {
-                            let ul = link.closest('ul');
-                            while (ul && ul !== navRoot) {
-                                if (ul.classList && ul.classList.contains('collapsed')) return true;
-                                ul = ul.parentElement ? ul.parentElement.closest('ul') : null;
-                            }
-                            return false;
-                        }
+            function getVisibleNavLinkForHash(hash) {
+                const allLinks = Array.from(navLinks);
+                const direct = allLinks.find(l => l.hash === hash || l.getAttribute('href') === hash);
+                if (!direct) return null;
 
-                        if (!isLinkHidden(direct)) return direct;
-
-                        // Bubble up: find the nearest ancestor LI that contains this UL
-                        let currentUl = direct.closest('ul');
-                        while (currentUl && currentUl !== navRoot) {
-                            // The parent LI that owns this UL
-                            const parentLi = currentUl.parentElement;
-                            if (!parentLi) break;
-                            const parentLink = parentLi.querySelector('a');
-                            if (parentLink && !isLinkHidden(parentLink)) return parentLink;
-                            // Move up to the UL that contains this LI
-                            currentUl = parentLi.closest('ul');
-                        }
-
-                        // Fallback: return the top-level first visible link
-                        return allLinks.find(l => !isLinkHidden(l)) || null;
+                function isLinkHidden(link) {
+                    let ul = link.closest('ul');
+                    while (ul && ul !== navRoot) {
+                        if (ul.classList && ul.classList.contains('collapsed')) return true;
+                        ul = ul.parentElement ? ul.parentElement.closest('ul') : null;
                     }
-
-                    const match = getVisibleNavLinkForHash(targetHash);
-                    if (match) match.classList.add('active');
+                    return false;
                 }
+
+                if (!isLinkHidden(direct)) return direct;
+
+                let currentUl = direct.closest('ul');
+                while (currentUl && currentUl !== navRoot) {
+                    const parentLi = currentUl.parentElement;
+                    if (!parentLi) break;
+                    const parentLink = parentLi.querySelector('a');
+                    if (parentLink && !isLinkHidden(parentLink)) return parentLink;
+                    currentUl = parentLi.closest('ul');
+                }
+
+                return allLinks.find(l => !isLinkHidden(l)) || null;
+            }
+
+            function highlightActiveHeader() {
+                const activeHeader = findActiveHeader();
+                navLinks.forEach(l => l.classList.remove('active'));
+                if (!activeHeader) return;
+
+                const match = getVisibleNavLinkForHash('#' + activeHeader.id);
+                if (match) match.classList.add('active');
             }
 
             // Throttle updates using requestAnimationFrame
@@ -1500,18 +1531,16 @@
                 if (!ticking) {
                     ticking = true;
                     window.requestAnimationFrame(() => {
-                        pickTopmostVisible();
+                        highlightActiveHeader();
                         ticking = false;
                     });
                 }
             }
 
-            // Use scroll + resize events for predictable "topmost" behavior
             mainContent.addEventListener('scroll', onScrollOrResize, { passive: true });
             window.addEventListener('resize', onScrollOrResize);
 
-            // Run once on load
-            pickTopmostVisible();
+            highlightActiveHeader();
         }
 
         // Handle all block collapsing
