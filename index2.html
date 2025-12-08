@@ -390,6 +390,25 @@
             <strong>Block: File Header</strong>
         </div>
         <div class="block-content" id="file-header-content">
+            <table class="field-table">
+                <thead>
+                    <tr>
+                        <th>Bit Layout</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="bit-layout">[File Header Block: Variable]</div>
+                        </td>
+                        <td>
+                            <div class="field-description">Top-level metadata wrapper containing the magic number,
+                                versioning info, and ancillary metadata records.</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <div class="nested-blocks">
                 <!-- Block: Magic Number -->
                 <div class="block-header" data-block="magic-number">
@@ -397,6 +416,25 @@
                     <strong>Block: Magic Number</strong>
                 </div>
                 <div class="block-content" id="magic-number-content">
+                    <table class="field-table">
+                        <thead>
+                            <tr>
+                                <th>Bit Layout</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="bit-layout">[Magic Number Block: 4B]</div>
+                                </td>
+                                <td>
+                                    <div class="field-description">Fixed identifier that guards the file and enables
+                                        format sniffing before deeper parsing.</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div class="nested-blocks">
                         <!-- Block: Signature Bytes -->
                         <div class="block-header" data-block="signature-bytes">
@@ -404,6 +442,25 @@
                             <strong>Block: Signature Bytes</strong>
                         </div>
                         <div class="block-content" id="signature-bytes-content">
+                            <table class="field-table">
+                                <thead>
+                                    <tr>
+                                        <th>Bit Layout</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="bit-layout">[Signature Bytes: 4 ASCII]</div>
+                                        </td>
+                                        <td>
+                                            <div class="field-description">Literal byte pattern that must match the
+                                                expected "BINF" sequence.</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <div class="nested-blocks">
                                 <!-- Block: ASCII Representation -->
                                 <div class="block-header" data-block="ascii-repr">
@@ -442,6 +499,25 @@
                     <strong>Block: Version</strong>
                 </div>
                 <div class="block-content" id="version-content">
+                    <table class="field-table">
+                        <thead>
+                            <tr>
+                                <th>Bit Layout</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="bit-layout">[Version Block: 2B]</div>
+                                </td>
+                                <td>
+                                    <div class="field-description">Encodes major and minor values that determine the
+                                        parsing rules for the rest of the structure.</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div class="nested-blocks">
                         <!-- Block: Major Version -->
                         <div class="block-header" data-block="major-version">
@@ -449,6 +525,25 @@
                             <strong>Block: Major Version</strong>
                         </div>
                         <div class="block-content" id="major-version-content">
+                            <table class="field-table">
+                                <thead>
+                                    <tr>
+                                        <th>Bit Layout</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="bit-layout">[Major Version Entry: 1B]</div>
+                                        </td>
+                                        <td>
+                                            <div class="field-description">Holds the compatibility-breaking revision
+                                                component.</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <div class="nested-blocks">
                                 <!-- Block: Version Number -->
                                 <div class="block-header" data-block="version-number">
@@ -549,6 +644,25 @@
             <strong>Block: Data Section</strong>
         </div>
         <div class="block-content" id="data-section-content">
+            <table class="field-table">
+                <thead>
+                    <tr>
+                        <th>Bit Layout</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="bit-layout">[Data Section: Variable]</div>
+                        </td>
+                        <td>
+                            <div class="field-description">Carries the repeating metadata and content blocks that make
+                                up the payload of the file.</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <div class="nested-blocks">
                 <!-- Block: Metadata Block -->
                 <div class="block-header" data-block="metadata-block">
@@ -556,6 +670,25 @@
                     <strong>Block: Metadata Block</strong>
                 </div>
                 <div class="block-content" id="metadata-block-content">
+                    <table class="field-table">
+                        <thead>
+                            <tr>
+                                <th>Bit Layout</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="bit-layout">[Metadata Block: Variable]</div>
+                                </td>
+                                <td>
+                                    <div class="field-description">Optional block that precedes user content with
+                                        descriptors, timestamps, and sizing info.</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div class="nested-blocks">
                         <!-- Block: Block Header -->
                         <div class="block-header" data-block="block-header">
@@ -563,6 +696,25 @@
                             <strong>Block: Block Header</strong>
                         </div>
                         <div class="block-content" id="block-header-content">
+                            <table class="field-table">
+                                <thead>
+                                    <tr>
+                                        <th>Bit Layout</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="bit-layout">[Block Header: Variable]</div>
+                                        </td>
+                                        <td>
+                                            <div class="field-description">Prefix for every block that conveys
+                                                structural information like type, flags, and sizing.</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <div class="nested-blocks">
                                 <!-- Block: Type Info -->
                                 <div class="block-header" data-block="type-info">
@@ -708,6 +860,25 @@
             <strong>Block: Footer</strong>
         </div>
         <div class="block-content" id="footer-content">
+            <table class="field-table">
+                <thead>
+                    <tr>
+                        <th>Bit Layout</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="bit-layout">[Footer Block: Variable]</div>
+                        </td>
+                        <td>
+                            <div class="field-description">Terminal structures that provide lookup tables and final
+                                validation markers.</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <div class="nested-blocks">
                 <!-- Block: Index Table -->
                 <div class="block-header" data-block="index-table">
