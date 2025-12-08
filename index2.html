@@ -231,6 +231,41 @@
             font-size: 24px;
         }
 
+        .main-pane-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .main-control-btn {
+            border: 1px solid #3498db;
+            background-color: #3498db;
+            color: #ecf0f1;
+            border-radius: 3px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .main-control-btn.secondary {
+            background-color: transparent;
+            color: #3498db;
+        }
+
+        .main-control-btn:hover {
+            background-color: #217dbb;
+            color: #fff;
+        }
+
+        .main-control-btn.secondary:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #1b6fa5;
+        }
+
         .main-content ul {
             list-style-type: disc;
             margin-left: 20px;
@@ -383,6 +418,10 @@
 
     <div class="main-content">
         <h1>Binary Format Structure</h1>
+        <div class="main-pane-controls">
+            <button type="button" class="main-control-btn" id="main-expand-all-btn">Expand all</button>
+            <button type="button" class="main-control-btn secondary" id="main-collapse-all-btn">Collapse all</button>
+        </div>
 
         <!-- Block: File Header -->
         <div class="block-header top-level">
@@ -1437,6 +1476,25 @@
             });
         }
 
+        // Handle global block visibility controls in the main pane
+        function initMainPaneControls() {
+            const expandBtn = document.getElementById('main-expand-all-btn');
+            const collapseBtn = document.getElementById('main-collapse-all-btn');
+            if (!expandBtn || !collapseBtn) return;
+
+            function setAllBlocks(collapsed) {
+                document.querySelectorAll('.block-content').forEach(content => {
+                    content.classList.toggle('collapsed', collapsed);
+                });
+                document.querySelectorAll('.block-header .block-toggle').forEach(toggle => {
+                    toggle.classList.toggle('collapsed', collapsed);
+                });
+            }
+
+            expandBtn.addEventListener('click', () => setAllBlocks(false));
+            collapseBtn.addEventListener('click', () => setAllBlocks(true));
+        }
+
         // Handle scroll tracking for active section highlighting
         function initScrollTracking() {
             const mainContent = document.querySelector('.main-content');
@@ -1676,6 +1734,7 @@
             initSidebarToggle();
             initSidebarResize();
             initExpandCollapseAll();
+            initMainPaneControls();
             generateNavigation();
             initCollapsibleBlocks();
             initScrollTracking();
