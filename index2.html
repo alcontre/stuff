@@ -1495,6 +1495,56 @@
             collapseBtn.addEventListener('click', () => setAllBlocks(true));
         }
 
+        // Ensure a block and its ancestors are visible
+        function expandBlockHierarchy(header) {
+            if (!header) return;
+
+            const toggle = header.querySelector('.block-toggle');
+            if (toggle) toggle.classList.remove('collapsed');
+
+            const contentId = header.dataset.contentId;
+            let content = contentId ? document.getElementById(contentId) : null;
+            if (!content || !content.classList.contains('block-content')) {
+                const nextEl = header.nextElementSibling;
+                if (nextEl && nextEl.classList.contains('block-content')) {
+                    content = nextEl;
+                }
+            }
+            if (content) content.classList.remove('collapsed');
+
+            let parent = header.parentElement;
+            while (parent) {
+                if (parent.classList && parent.classList.contains('block-content')) {
+                    parent.classList.remove('collapsed');
+                    const parentHeader = parent.previousElementSibling;
+                    if (parentHeader && parentHeader.classList.contains('block-header')) {
+                        const parentToggle = parentHeader.querySelector('.block-toggle');
+                        if (parentToggle) parentToggle.classList.remove('collapsed');
+                    }
+                }
+                parent = parent.parentElement;
+            }
+        }
+
+        // Expand collapsed parents when navigating via sidebar links
+        function initNavLinkExpansion() {
+            const navContainer = document.getElementById('sidebar-nav');
+            if (!navContainer) return;
+
+            navContainer.addEventListener('click', function (event) {
+                const link = event.target.closest('a');
+                if (!link || !navContainer.contains(link)) return;
+
+                const hash = link.getAttribute('href');
+                if (!hash || !hash.startsWith('#')) return;
+
+                const header = document.getElementById(hash.slice(1));
+                if (!header || !header.classList.contains('block-header')) return;
+
+                expandBlockHierarchy(header);
+            });
+        }
+
         // Handle scroll tracking for active section highlighting
         function initScrollTracking() {
             const mainContent = document.querySelector('.main-content');
@@ -1736,6 +1786,7 @@
             initExpandCollapseAll();
             initMainPaneControls();
             generateNavigation();
+            initNavLinkExpansion();
             initCollapsibleBlocks();
             initScrollTracking();
         });
