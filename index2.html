@@ -985,8 +985,6 @@
         // Generate navigation from main content
         function generateNavigation() {
             const navContainer = document.getElementById('sidebar-nav');
-            const nav = document.createElement('ul');
-            let numberingStack = [0]; // Track numbering at each level
 
             // Apply section number to header element (id, data, and visible text)
             function applySectionNumber(header, sectionNumber, blockId, labelText) {
@@ -1006,24 +1004,23 @@
             }
 
             // Recursively build navigation tree from nested block structure
-            function buildNavTree(parentElement, depth = 0) {
+            function buildNavTree(parentElement, depth = 0, prefix = []) {
+                const selector = depth === 0
+                    ? ':scope > .block-header.top-level'
+                    : ':scope > .block-header';
+                const blockHeaders = parentElement.querySelectorAll(selector);
+                if (blockHeaders.length === 0) return null;
+
                 const navList = document.createElement('ul');
-                const blockHeaders = parentElement.querySelectorAll(':scope > .block-header');
 
                 blockHeaders.forEach((header, index) => {
-                    // Update numbering
-                    if (depth >= numberingStack.length) {
-                        numberingStack.push(0);
-                    }
-                    numberingStack[depth] = index + 1;
-                    numberingStack.splice(depth + 1); // Remove deeper levels
-
-                    const sectionNumber = numberingStack.slice(0, depth + 1).join('.');
-                    const text = header.querySelector('strong').textContent.trim();
+                    const numberParts = prefix.concat(index + 1);
+                    const sectionNumber = numberParts.join('.');
+                    const strongEl = header.querySelector('strong');
+                    const text = strongEl ? strongEl.textContent.trim() : header.textContent.trim();
                     const blockId = 'section-' + sectionNumber;
 
                     applySectionNumber(header, sectionNumber, blockId, text);
-
 
                     const navLi = document.createElement('li');
                     const link = document.createElement('a');
@@ -1031,16 +1028,18 @@
                     link.textContent = sectionNumber + ' ' + text;
                     navLi.appendChild(link);
 
-                    // Check if this block has nested blocks
                     const contentDiv = document.getElementById(header.dataset.block + '-content');
-                    if (contentDiv) {
-                        const nestedBlockHeaders = contentDiv.querySelectorAll(':scope > .nested-blocks > .block-header');
-                        if (nestedBlockHeaders.length > 0) {
-                            navLi.classList.add('has-nested');
-                            const nestedNav = buildNavTree(contentDiv.querySelector('.nested-blocks'), depth + 1);
-                            nestedNav.classList.add('nested');
-                            navLi.appendChild(nestedNav);
-                        }
+                    const nestedContainer = contentDiv
+                        ? contentDiv.querySelector(':scope > .nested-blocks')
+                        : null;
+                    const nestedNav = nestedContainer
+                        ? buildNavTree(nestedContainer, depth + 1, numberParts)
+                        : null;
+
+                    if (nestedNav) {
+                        navLi.classList.add('has-nested');
+                        nestedNav.classList.add('nested');
+                        navLi.appendChild(nestedNav);
                     }
 
                     navList.appendChild(navLi);
@@ -1049,42 +1048,11 @@
                 return navList;
             }
 
-            // Find the main content area and build nav from top-level blocks
             const mainContent = document.querySelector('.main-content');
-            const topLevelBlocks = mainContent.querySelectorAll(':scope > .block-header.top-level');
-
-            topLevelBlocks.forEach((header, index) => {
-                numberingStack = [index + 1];
-
-                const sectionNumber = '' + (index + 1);
-                const text = header.querySelector('strong').textContent.trim();
-                const blockId = 'section-' + sectionNumber;
-
-                applySectionNumber(header, sectionNumber, blockId, text);
-
-                const navLi = document.createElement('li');
-                const link = document.createElement('a');
-                link.href = '#' + blockId;
-                link.textContent = sectionNumber + ' ' + text;
-                navLi.appendChild(link);
-
-                // Check if this block has nested blocks
-                const contentDiv = document.getElementById(header.dataset.block + '-content');
-                if (contentDiv) {
-                    const nestedBlockHeaders = contentDiv.querySelectorAll(':scope > .nested-blocks > .block-header');
-                    if (nestedBlockHeaders.length > 0) {
-                        navLi.classList.add('has-nested');
-                        numberingStack = [index + 1, 0];
-                        const nestedNav = buildNavTree(contentDiv.querySelector('.nested-blocks'), 1);
-                        nestedNav.classList.add('nested');
-                        navLi.appendChild(nestedNav);
-                    }
-                }
-
-                nav.appendChild(navLi);
-            });
-
-            navContainer.appendChild(nav);
+            const navTree = buildNavTree(mainContent);
+            if (navTree) {
+                navContainer.appendChild(navTree);
+            }
 
             // Add toggle functionality to all items with nested lists
             function addToggleFunctionality(container) {
