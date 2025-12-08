@@ -1527,20 +1527,31 @@
         }
 
         // Scroll the main content pane to a header after layout settles
-        function scrollHeaderIntoView(header, hash) {
+        function scrollHeaderIntoView(header, hash, options = {}) {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent || !header) return;
+            const { updateHash = false } = options;
 
             const scrollToHeader = () => {
                 const headerRect = header.getBoundingClientRect();
                 const mainRect = mainContent.getBoundingClientRect();
                 const targetTop = headerRect.top - mainRect.top + mainContent.scrollTop - 12;
                 mainContent.scrollTo({ top: targetTop, behavior: 'smooth' });
-                if (hash) history.replaceState(null, '', hash);
+                if (hash && updateHash) history.replaceState(null, '', hash);
             };
 
             // Wait for expansion reflow before measuring positions
             requestAnimationFrame(() => requestAnimationFrame(scrollToHeader));
+        }
+
+        // Reveal and optionally scroll to the section referenced by a hash
+        function revealHashTarget(hash, { scroll = false, updateHash = false } = {}) {
+            if (!hash || !hash.startsWith('#')) return;
+            const header = document.getElementById(hash.slice(1));
+            if (!header || !header.classList.contains('block-header')) return;
+
+            expandBlockHierarchy(header);
+            if (scroll) scrollHeaderIntoView(header, hash, { updateHash });
         }
 
         // Expand collapsed parents when navigating via sidebar links
@@ -1556,11 +1567,7 @@
                 if (!hash || !hash.startsWith('#')) return;
                 event.preventDefault();
 
-                const header = document.getElementById(hash.slice(1));
-                if (!header || !header.classList.contains('block-header')) return;
-
-                expandBlockHierarchy(header);
-                scrollHeaderIntoView(header, hash);
+                revealHashTarget(hash, { scroll: true, updateHash: true });
             });
         }
 
@@ -1808,6 +1815,12 @@
             initNavLinkExpansion();
             initCollapsibleBlocks();
             initScrollTracking();
+            if (window.location.hash) {
+                revealHashTarget(window.location.hash, { scroll: true, updateHash: false });
+            }
+            window.addEventListener('hashchange', () => {
+                revealHashTarget(window.location.hash, { scroll: true, updateHash: false });
+            });
         });
     </script>
 </body>
