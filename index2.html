@@ -355,6 +355,13 @@
         .nested-blocks {
             margin-left: 14px;
         }
+
+        .section-number {
+            display: inline-block;
+            margin-right: 6px;
+            color: #5c6b7a;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -874,12 +881,41 @@
             const navContainer = document.getElementById('sidebar-nav');
             const nav = document.createElement('ul');
             let numberingStack = [0]; // Track numbering at each level
-            
+
+            // Apply section number to header element (id, data, and visible text)
+            function applySectionNumber(header, sectionNumber, blockId, labelText) {
+                header.dataset.sectionNumber = sectionNumber;
+                header.id = blockId;
+
+                const strongEl = header.querySelector('strong');
+                if (strongEl) {
+                    // Always derive a clean label on each run (idempotent)
+                    const clone = strongEl.cloneNode(true);
+                    clone.querySelectorAll('.section-number').forEach(n => n.remove());
+                    const raw = clone.textContent || '';
+                    const cleanLabel = (labelText || raw)
+                        .replace(/^[\d.]+\s+/, '')
+                        .replace(/^[▼▶]\s*/, '')
+                        .trim();
+
+                    // Remove any existing number spans within this header before re-inserting
+                    header.querySelectorAll('.section-number').forEach(n => n.remove());
+
+                    // Insert number span before the strong label; keep label number-free
+                    const numSpan = document.createElement('span');
+                    numSpan.className = 'section-number';
+                    numSpan.textContent = sectionNumber;
+
+                    strongEl.textContent = cleanLabel;
+                    header.insertBefore(numSpan, strongEl);
+                }
+            }
+
             // Recursively build navigation tree from nested block structure
             function buildNavTree(parentElement, depth = 0) {
                 const navList = document.createElement('ul');
                 const blockHeaders = parentElement.querySelectorAll(':scope > .block-header');
-                
+
                 blockHeaders.forEach((header, index) => {
                     // Update numbering
                     if (depth >= numberingStack.length) {
@@ -887,21 +923,21 @@
                     }
                     numberingStack[depth] = index + 1;
                     numberingStack.splice(depth + 1); // Remove deeper levels
-                    
+
                     const sectionNumber = numberingStack.slice(0, depth + 1).join('.');
-                    const text = header.textContent.trim().replace(/^[▼▶]\s*/, '');
+                    const rawText = (header.querySelector('strong')?.dataset.originalLabel || header.textContent).trim();
+                    const text = rawText.replace(/^[\d.]+\s+/, '').replace(/^[▼▶]\s*/, '');
                     const blockId = 'section-' + sectionNumber;
-                    
-                    // Update header with section number
-                    header.dataset.sectionNumber = sectionNumber;
-                    header.id = blockId;
-                    
+
+                    applySectionNumber(header, sectionNumber, blockId, text);
+
+
                     const navLi = document.createElement('li');
                     const link = document.createElement('a');
                     link.href = '#' + blockId;
                     link.textContent = sectionNumber + ' ' + text;
                     navLi.appendChild(link);
-                    
+
                     // Check if this block has nested blocks
                     const contentDiv = document.getElementById(header.dataset.block + '-content');
                     if (contentDiv) {
@@ -913,34 +949,34 @@
                             navLi.appendChild(nestedNav);
                         }
                     }
-                    
+
                     navList.appendChild(navLi);
                 });
-                
+
                 return navList;
             }
-            
+
             // Find the main content area and build nav from top-level blocks
             const mainContent = document.querySelector('.main-content');
             const topLevelBlocks = mainContent.querySelectorAll(':scope > .block-header.top-level');
-            
+
             topLevelBlocks.forEach((header, index) => {
                 numberingStack = [index + 1];
-                
+
                 const sectionNumber = '' + (index + 1);
-                const text = header.textContent.trim().replace(/^[▼▶]\s*/, '');
+                const rawText = (header.querySelector('strong')?.dataset.originalLabel || header.textContent).trim();
+                const text = rawText.replace(/^[\d.]+\s+/, '').replace(/^[▼▶]\s*/, '');
                 const blockId = 'section-' + sectionNumber;
                 
-                // Update header with section number
-                header.dataset.sectionNumber = sectionNumber;
-                header.id = blockId;
-                
+                applySectionNumber(header, sectionNumber, blockId, text);
+
+
                 const navLi = document.createElement('li');
                 const link = document.createElement('a');
                 link.href = '#' + blockId;
                 link.textContent = sectionNumber + ' ' + text;
                 navLi.appendChild(link);
-                
+
                 // Check if this block has nested blocks
                 const contentDiv = document.getElementById(header.dataset.block + '-content');
                 if (contentDiv) {
@@ -953,23 +989,23 @@
                         navLi.appendChild(nestedNav);
                     }
                 }
-                
+
                 nav.appendChild(navLi);
             });
-            
+
             navContainer.appendChild(nav);
-            
+
             // Add toggle functionality to all items with nested lists
             function addToggleFunctionality(container) {
                 container.querySelectorAll('li.has-nested > a').forEach(link => {
                     // Check if toggle already exists
                     if (link.querySelector('.nav-toggle')) return;
-                    
+
                     const toggle = document.createElement('span');
                     toggle.classList.add('nav-toggle');
                     toggle.textContent = '▼';
                     link.insertBefore(toggle, link.firstChild);
-                    
+
                     toggle.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -981,7 +1017,7 @@
                     });
                 });
             }
-            
+
             addToggleFunctionality(navContainer);
         }
         
