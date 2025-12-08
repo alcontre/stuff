@@ -1526,6 +1526,23 @@
             }
         }
 
+        // Scroll the main content pane to a header after layout settles
+        function scrollHeaderIntoView(header, hash) {
+            const mainContent = document.querySelector('.main-content');
+            if (!mainContent || !header) return;
+
+            const scrollToHeader = () => {
+                const headerRect = header.getBoundingClientRect();
+                const mainRect = mainContent.getBoundingClientRect();
+                const targetTop = headerRect.top - mainRect.top + mainContent.scrollTop - 12;
+                mainContent.scrollTo({ top: targetTop, behavior: 'smooth' });
+                if (hash) history.replaceState(null, '', hash);
+            };
+
+            // Wait for expansion reflow before measuring positions
+            requestAnimationFrame(() => requestAnimationFrame(scrollToHeader));
+        }
+
         // Expand collapsed parents when navigating via sidebar links
         function initNavLinkExpansion() {
             const navContainer = document.getElementById('sidebar-nav');
@@ -1537,11 +1554,13 @@
 
                 const hash = link.getAttribute('href');
                 if (!hash || !hash.startsWith('#')) return;
+                event.preventDefault();
 
                 const header = document.getElementById(hash.slice(1));
                 if (!header || !header.classList.contains('block-header')) return;
 
                 expandBlockHierarchy(header);
+                scrollHeaderIntoView(header, hash);
             });
         }
 
