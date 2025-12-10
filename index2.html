@@ -14,9 +14,22 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            display: block;
             height: 100vh;
             background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .layout-container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            position: relative;
+        }
+
+        .sidebar-wrapper {
+            position: relative;
+            display: flex;
         }
 
         .sidebar {
@@ -27,16 +40,14 @@
             padding: 12px;
             border-right: 1px solid #34495e;
             transition: margin-left 0.3s ease;
-            position: relative;
             min-width: 150px;
             max-width: 600px;
-            float: left;
-            height: 100vh;
+            flex-shrink: 0;
         }
 
         .sidebar-resize-handle {
             position: absolute;
-            right: 0;
+            right: -4px;
             top: 0;
             bottom: 0;
             width: 8px;
@@ -44,6 +55,7 @@
             background-color: #34495e;
             opacity: 0;
             transition: opacity 0.2s;
+            z-index: 100;
         }
 
         .sidebar:hover .sidebar-resize-handle {
@@ -222,10 +234,9 @@
         }
 
         .main-content {
-            margin-left: 250px;
+            flex: 1;
             padding: 24px;
             overflow-y: auto;
-            height: 100vh;
         }
 
         .main-content h1 {
@@ -405,1427 +416,1481 @@
 </head>
 
 <body>
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-resize-handle" id="sidebar-resize-handle"></div>
-        <div class="sidebar-header">
-            <h2>Navigation</h2>
-            <div class="sidebar-controls">
-                <button class="sidebar-control-btn" id="expand-all-btn" title="Expand all">+</button>
-                <button class="sidebar-control-btn" id="collapse-all-btn" title="Collapse all">−</button>
-                <button class="sidebar-toggle" id="sidebar-toggle-btn">☰</button>
-            </div>
-        </div>
-        <div id="sidebar-nav"></div>
-    </div>
-    <button class="toggle-overlay" id="toggle-overlay-btn">☰</button>
-
-    <div class="main-content">
-        <h1>Binary Format Structure</h1>
-        <div class="main-pane-controls">
-            <button type="button" class="main-control-btn" id="main-expand-all-btn">Expand all</button>
-            <button type="button" class="main-control-btn secondary" id="main-collapse-all-btn">Collapse all</button>
-        </div>
-
-        <!-- Block: File Header -->
-        <div class="block-header top-level">
-            <span class="block-toggle">▼</span>
-            <strong>Block: File Header</strong>
-        </div>
-        <div class="block-content">
-            <table class="field-table">
-                <thead>
-                    <tr>
-                        <th>Bit Layout</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="bit-layout">[File Header Block: Variable]</div>
-                        </td>
-                        <td>
-                            <div class="field-description">Top-level metadata wrapper containing the magic number,
-                                versioning info, and ancillary metadata records.</div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="nested-blocks">
-                <!-- myblock -->
-                <div class="block-header">
-                    <span class="block-toggle">▼</span>
-                    <strong>Block: Magic Number</strong>
-                </div>
-                <div class="block-content">
-                    <table class="field-table">
-                        <thead>
-                            <tr>
-                                <th>Bit Layout</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Magic Number Block: 4B]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Fixed identifier that guards the file and enables
-                                        format sniffing before deeper parsing.</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="nested-blocks">
+    <div class="layout-container">
+        <div class="sidebar-wrapper">
+            <div class="sidebar-resize-handle" id="sidebar-resize-handle"></div>
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h2>Navigation</h2>
+                    <div class="sidebar-controls">
+                        <button class="sidebar-control-btn" id="expand-all-btn" title="Expand all">+</button>
+                        <button class="sidebar-control-btn" id="collapse-all-btn" title="Collapse all">−</button>
+                        <button class="sidebar-toggle" id="sidebar-toggle-btn">☰</button>
                     </div>
                 </div>
-                <!-- Block: Magic Number -->
-                <div class="block-header">
-                    <span class="block-toggle">▼</span>
-                    <strong>Block: Magic Number</strong>
-                </div>
-                <div class="block-content">
-                    <table class="field-table">
-                        <thead>
-                            <tr>
-                                <th>Bit Layout</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Magic Number Block: 4B]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Fixed identifier that guards the file and enables
-                                        format sniffing before deeper parsing.</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="nested-blocks">
-                        <!-- Block: Signature Bytes -->
-                        <div class="block-header">
-                            <span class="block-toggle">▼</span>
-                            <strong>Block: Signature Bytes</strong>
+                <div id="sidebar-nav"></div>
+            </div>
+        </div>
+        <button class="toggle-overlay" id="toggle-overlay-btn">☰</button>
+
+        <div class="main-content">
+            <h1>Binary Format Structure</h1>
+            <div class="main-pane-controls">
+                <button type="button" class="main-control-btn" id="main-expand-all-btn">Expand all</button>
+                <button type="button" class="main-control-btn secondary" id="main-collapse-all-btn">Collapse
+                    all</button>
+            </div>
+
+            <!-- Block: File Header -->
+            <div class="block-header top-level">
+                <span class="block-toggle">▼</span>
+                <strong>Block: File Header</strong>
+            </div>
+            <div class="block-content">
+                <table class="field-table">
+                    <thead>
+                        <tr>
+                            <th>Bit Layout</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="bit-layout">[File Header Block: Variable]</div>
+                            </td>
+                            <td>
+                                <div class="field-description">Top-level metadata wrapper containing the magic number,
+                                    versioning info, and ancillary metadata records.</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="nested-blocks">
+                    <!-- myblock -->
+                    <div class="block-header">
+                        <span class="block-toggle">▼</span>
+                        <strong>Block: Magic Number</strong>
+                    </div>
+                    <div class="block-content">
+                        <table class="field-table">
+                            <thead>
+                                <tr>
+                                    <th>Bit Layout</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Magic Number Block: 4B]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Fixed identifier that guards the file and enables
+                                            format sniffing before deeper parsing.</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="nested-blocks">
                         </div>
-                        <div class="block-content">
-                            <table class="field-table">
-                                <thead>
-                                    <tr>
-                                        <th>Bit Layout</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="bit-layout">[Signature Bytes: 4 ASCII]</div>
-                                        </td>
-                                        <td>
-                                            <div class="field-description">Literal byte pattern that must match the
-                                                expected "BINF" sequence.</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="nested-blocks">
-                                <!-- Block: ASCII Representation -->
-                                <div class="block-header">
-                                    <span class="block-toggle">▼</span>
-                                    <strong>Block: ASCII Representation</strong>
-                                </div>
-                                <div class="block-content">
-                                    <table class="field-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Bit Layout</th>
-                                                <th>Description</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">"BINF"</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">ASCII encoding of magic bytes (0x42
-                                                        0x49 0x4E 0x46)</div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                    </div>
+                    <!-- Block: Magic Number -->
+                    <div class="block-header">
+                        <span class="block-toggle">▼</span>
+                        <strong>Block: Magic Number</strong>
+                    </div>
+                    <div class="block-content">
+                        <table class="field-table">
+                            <thead>
+                                <tr>
+                                    <th>Bit Layout</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Magic Number Block: 4B]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Fixed identifier that guards the file and enables
+                                            format sniffing before deeper parsing.</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="nested-blocks">
+                            <!-- Block: Signature Bytes -->
+                            <div class="block-header">
+                                <span class="block-toggle">▼</span>
+                                <strong>Block: Signature Bytes</strong>
+                            </div>
+                            <div class="block-content">
+                                <table class="field-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Bit Layout</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="bit-layout">[Signature Bytes: 4 ASCII]</div>
+                                            </td>
+                                            <td>
+                                                <div class="field-description">Literal byte pattern that must match the
+                                                    expected "BINF" sequence.</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="nested-blocks">
+                                    <!-- Block: ASCII Representation -->
+                                    <div class="block-header">
+                                        <span class="block-toggle">▼</span>
+                                        <strong>Block: ASCII Representation</strong>
+                                    </div>
+                                    <div class="block-content">
+                                        <table class="field-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Bit Layout</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">"BINF"</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">ASCII encoding of magic bytes
+                                                            (0x42
+                                                            0x49 0x4E 0x46)</div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Block: Version -->
-                <div class="block-header">
-                    <span class="block-toggle">▼</span>
-                    <strong>Block: Version</strong>
-                </div>
-                <div class="block-content">
-                    <table class="field-table">
-                        <thead>
-                            <tr>
-                                <th>Bit Layout</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Version Block: 2B]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Encodes major and minor values that determine the
-                                        parsing rules for the rest of the structure.</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="nested-blocks">
-                        <!-- Block: Major Version -->
-                        <div class="block-header">
-                            <span class="block-toggle">▼</span>
-                            <strong>Block: Major Version</strong>
-                        </div>
-                        <div class="block-content">
-                            <table class="field-table">
-                                <thead>
-                                    <tr>
-                                        <th>Bit Layout</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="bit-layout">[Major Version Entry: 1B]</div>
-                                        </td>
-                                        <td>
-                                            <div class="field-description">Holds the compatibility-breaking revision
-                                                component.</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="nested-blocks">
-                                <!-- Block: Version Number -->
-                                <div class="block-header">
-                                    <span class="block-toggle">▼</span>
-                                    <strong>Block: Version Number</strong>
-                                </div>
-                                <div class="block-content">
-                                    <table class="field-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Bit Layout</th>
-                                                <th>Description</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Version: 1B]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Major version number (e.g., 0x01 for
-                                                        version 1)</div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                    <!-- Block: Version -->
+                    <div class="block-header">
+                        <span class="block-toggle">▼</span>
+                        <strong>Block: Version</strong>
+                    </div>
+                    <div class="block-content">
+                        <table class="field-table">
+                            <thead>
+                                <tr>
+                                    <th>Bit Layout</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Version Block: 2B]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Encodes major and minor values that determine the
+                                            parsing rules for the rest of the structure.</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="nested-blocks">
+                            <!-- Block: Major Version -->
+                            <div class="block-header">
+                                <span class="block-toggle">▼</span>
+                                <strong>Block: Major Version</strong>
+                            </div>
+                            <div class="block-content">
+                                <table class="field-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Bit Layout</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="bit-layout">[Major Version Entry: 1B]</div>
+                                            </td>
+                                            <td>
+                                                <div class="field-description">Holds the compatibility-breaking revision
+                                                    component.</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="nested-blocks">
+                                    <!-- Block: Version Number -->
+                                    <div class="block-header">
+                                        <span class="block-toggle">▼</span>
+                                        <strong>Block: Version Number</strong>
+                                    </div>
+                                    <div class="block-content">
+                                        <table class="field-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Bit Layout</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Version: 1B]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Major version number (e.g., 0x01
+                                                            for
+                                                            version 1)</div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Block: Minor Version -->
-                        <div class="block-header">
-                            <span class="block-toggle">▼</span>
-                            <strong>Block: Minor Version</strong>
-                        </div>
-                        <div class="block-content">
-                            <table class="field-table">
-                                <thead>
-                                    <tr>
-                                        <th>Bit Layout</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="bit-layout">[Revision: 1B]</div>
-                                        </td>
-                                        <td>
-                                            <div class="field-description">Minor version/revision number</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Block: Metadata -->
-                <div class="block-header">
-                    <span class="block-toggle">▼</span>
-                    <strong>Block: Metadata</strong>
-                </div>
-                <div class="block-content">
-                    <table class="field-table">
-                        <thead>
-                            <tr>
-                                <th>Bit Layout</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[File Size: 4 bytes]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Total file size in bytes</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Checksum: 4 bytes]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">CRC32 checksum of file content</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Block: Data Section -->
-        <div class="block-header top-level">
-            <span class="block-toggle">▼</span>
-            <strong>Block: Data Section</strong>
-        </div>
-        <div class="block-content">
-            <table class="field-table">
-                <thead>
-                    <tr>
-                        <th>Bit Layout</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="bit-layout">[Data Section: Variable]</div>
-                        </td>
-                        <td>
-                            <div class="field-description">Carries the repeating metadata and content blocks that make
-                                up the payload of the file.</div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="nested-blocks">
-                <!-- Block: Metadata Block -->
-                <div class="block-header">
-                    <span class="block-toggle">▼</span>
-                    <strong>Block: Metadata Block</strong>
-                </div>
-                <div class="block-content">
-                    <table class="field-table">
-                        <thead>
-                            <tr>
-                                <th>Bit Layout</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Metadata Block: Variable]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Optional block that precedes user content with
-                                        descriptors, timestamps, and sizing info.</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="nested-blocks">
-                        <!-- Block: Block Header -->
-                        <div class="block-header">
-                            <span class="block-toggle">▼</span>
-                            <strong>Block: Block Header</strong>
-                        </div>
-                        <div class="block-content">
-                            <table class="field-table">
-                                <thead>
-                                    <tr>
-                                        <th>Bit Layout</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="bit-layout">[Block Header: Variable]</div>
-                                        </td>
-                                        <td>
-                                            <div class="field-description">Prefix for every block that conveys
-                                                structural information like type, flags, and sizing.</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="nested-blocks">
-                                <!-- Block: Type Info -->
-                                <div class="block-header">
-                                    <span class="block-toggle">▼</span>
-                                    <strong>Block: Type Info</strong>
-                                </div>
-                                <div class="block-content">
-                                    <table class="field-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Bit Layout</th>
-                                                <th>Description</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Type: 1B]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Block type identifier (1=metadata,
-                                                        2=content, 3=index)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="bit-layout">[Flags: 2b]</div>
-                                                </td>
-                                                <td>
-                                                    <div class="field-description">Control flags (bit 0=compressed, bit
-                                                        1=encrypted)</div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <!-- Block: Minor Version -->
+                            <div class="block-header">
+                                <span class="block-toggle">▼</span>
+                                <strong>Block: Minor Version</strong>
+                            </div>
+                            <div class="block-content">
+                                <table class="field-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Bit Layout</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="bit-layout">[Revision: 1B]</div>
+                                            </td>
+                                            <td>
+                                                <div class="field-description">Minor version/revision number</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Block: Block Length -->
-                        <div class="block-header">
-                            <span class="block-toggle">▼</span>
-                            <strong>Block: Block Length</strong>
-                        </div>
-                        <div class="block-content">
-                            <table class="field-table">
-                                <thead>
-                                    <tr>
-                                        <th>Bit Layout</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="bit-layout">[Length: 3B]</div>
-                                        </td>
-                                        <td>
-                                            <div class="field-description">Block length in bytes (24-bit, max 16MB)
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Block: Timestamp -->
-                        <div class="block-header">
-                            <span class="block-toggle">▼</span>
-                            <strong>Block: Timestamp</strong>
-                        </div>
-                        <div class="block-content">
-                            <table class="field-table">
-                                <thead>
-                                    <tr>
-                                        <th>Bit Layout</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="bit-layout">[Timestamp: 8B]</div>
-                                        </td>
-                                        <td>
-                                            <div class="field-description">Unix timestamp (64-bit seconds since epoch)
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <!-- Block: Metadata -->
+                    <div class="block-header">
+                        <span class="block-toggle">▼</span>
+                        <strong>Block: Metadata</strong>
+                    </div>
+                    <div class="block-content">
+                        <table class="field-table">
+                            <thead>
+                                <tr>
+                                    <th>Bit Layout</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[File Size: 4 bytes]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Total file size in bytes</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Checksum: 4 bytes]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">CRC32 checksum of file content</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
 
-                <!-- Block: Content Block -->
-                <div class="block-header">
-                    <span class="block-toggle">▼</span>
-                    <strong>Block: Content Block</strong>
+            <!-- Block: Data Section -->
+            <div class="block-header top-level">
+                <span class="block-toggle">▼</span>
+                <strong>Block: Data Section</strong>
+            </div>
+            <div class="block-content">
+                <table class="field-table">
+                    <thead>
+                        <tr>
+                            <th>Bit Layout</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="bit-layout">[Data Section: Variable]</div>
+                            </td>
+                            <td>
+                                <div class="field-description">Carries the repeating metadata and content blocks that
+                                    make
+                                    up the payload of the file.</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="nested-blocks">
+                    <!-- Block: Metadata Block -->
+                    <div class="block-header">
+                        <span class="block-toggle">▼</span>
+                        <strong>Block: Metadata Block</strong>
+                    </div>
+                    <div class="block-content">
+                        <table class="field-table">
+                            <thead>
+                                <tr>
+                                    <th>Bit Layout</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Metadata Block: Variable]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Optional block that precedes user content with
+                                            descriptors, timestamps, and sizing info.</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="nested-blocks">
+                            <!-- Block: Block Header -->
+                            <div class="block-header">
+                                <span class="block-toggle">▼</span>
+                                <strong>Block: Block Header</strong>
+                            </div>
+                            <div class="block-content">
+                                <table class="field-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Bit Layout</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="bit-layout">[Block Header: Variable]</div>
+                                            </td>
+                                            <td>
+                                                <div class="field-description">Prefix for every block that conveys
+                                                    structural information like type, flags, and sizing.</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="nested-blocks">
+                                    <!-- Block: Type Info -->
+                                    <div class="block-header">
+                                        <span class="block-toggle">▼</span>
+                                        <strong>Block: Type Info</strong>
+                                    </div>
+                                    <div class="block-content">
+                                        <table class="field-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Bit Layout</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Type: 1B]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Block type identifier
+                                                            (1=metadata,
+                                                            2=content, 3=index)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bit-layout">[Flags: 2b]</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="field-description">Control flags (bit 0=compressed,
+                                                            bit
+                                                            1=encrypted)</div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Block: Block Length -->
+                            <div class="block-header">
+                                <span class="block-toggle">▼</span>
+                                <strong>Block: Block Length</strong>
+                            </div>
+                            <div class="block-content">
+                                <table class="field-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Bit Layout</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="bit-layout">[Length: 3B]</div>
+                                            </td>
+                                            <td>
+                                                <div class="field-description">Block length in bytes (24-bit, max 16MB)
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Block: Timestamp -->
+                            <div class="block-header">
+                                <span class="block-toggle">▼</span>
+                                <strong>Block: Timestamp</strong>
+                            </div>
+                            <div class="block-content">
+                                <table class="field-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Bit Layout</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="bit-layout">[Timestamp: 8B]</div>
+                                            </td>
+                                            <td>
+                                                <div class="field-description">Unix timestamp (64-bit seconds since
+                                                    epoch)
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Block: Content Block -->
+                    <div class="block-header">
+                        <span class="block-toggle">▼</span>
+                        <strong>Block: Content Block</strong>
+                    </div>
+                    <div class="block-content">
+                        <table class="field-table">
+                            <thead>
+                                <tr>
+                                    <th>Bit Layout</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Record Header: 2B]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Record type and flags (2 bytes)</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Record Data: Variable]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Variable-length record payload</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Compression: 1b]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Compression flag (0=uncompressed, 1=compressed)
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="block-content">
-                    <table class="field-table">
-                        <thead>
-                            <tr>
-                                <th>Bit Layout</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Record Header: 2B]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Record type and flags (2 bytes)</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Record Data: Variable]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Variable-length record payload</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Compression: 1b]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Compression flag (0=uncompressed, 1=compressed)</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            </div>
+
+            <!-- Block: Footer -->
+            <div class="block-header top-level">
+                <span class="block-toggle">▼</span>
+                <strong>Block: Footer</strong>
+            </div>
+            <div class="block-content">
+                <table class="field-table">
+                    <thead>
+                        <tr>
+                            <th>Bit Layout</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="bit-layout">[Footer Block: Variable]</div>
+                            </td>
+                            <td>
+                                <div class="field-description">Terminal structures that provide lookup tables and final
+                                    validation markers.</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="nested-blocks">
+                    <!-- Block: Index Table -->
+                    <div class="block-header">
+                        <span class="block-toggle">▼</span>
+                        <strong>Block: Index Table</strong>
+                    </div>
+                    <div class="block-content">
+                        <table class="field-table">
+                            <thead>
+                                <tr>
+                                    <th>Bit Layout</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Entry Count: 2B]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Number of index entries</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Entry Size: 1B]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Size of each entry in bytes</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Entries: 8B each]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Index entries (offset and length pairs)</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Block: End Marker -->
+                    <div class="block-header">
+                        <span class="block-toggle">▼</span>
+                        <strong>Block: End Marker</strong>
+                    </div>
+                    <div class="block-content">
+                        <table class="field-table">
+                            <thead>
+                                <tr>
+                                    <th>Bit Layout</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Terminator: 4B]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">End-of-file marker (0xFFFFFFFF)</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="bit-layout">[Checksum: 4B]</div>
+                                    </td>
+                                    <td>
+                                        <div class="field-description">Final verification checksum</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Block: Footer -->
-        <div class="block-header top-level">
-            <span class="block-toggle">▼</span>
-            <strong>Block: Footer</strong>
-        </div>
-        <div class="block-content">
-            <table class="field-table">
-                <thead>
-                    <tr>
-                        <th>Bit Layout</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="bit-layout">[Footer Block: Variable]</div>
-                        </td>
-                        <td>
-                            <div class="field-description">Terminal structures that provide lookup tables and final
-                                validation markers.</div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="nested-blocks">
-                <!-- Block: Index Table -->
-                <div class="block-header">
-                    <span class="block-toggle">▼</span>
-                    <strong>Block: Index Table</strong>
-                </div>
-                <div class="block-content">
-                    <table class="field-table">
-                        <thead>
-                            <tr>
-                                <th>Bit Layout</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Entry Count: 2B]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Number of index entries</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Entry Size: 1B]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Size of each entry in bytes</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Entries: 8B each]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Index entries (offset and length pairs)</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <script>
+            // Handle sidebar toggle
+            function initSidebarToggle() {
+                const sidebar = document.getElementById('sidebar');
+                const toggleBtn = document.getElementById('sidebar-toggle-btn');
+                const overlayBtn = document.getElementById('toggle-overlay-btn');
 
-                <!-- Block: End Marker -->
-                <div class="block-header">
-                    <span class="block-toggle">▼</span>
-                    <strong>Block: End Marker</strong>
-                </div>
-                <div class="block-content">
-                    <table class="field-table">
-                        <thead>
-                            <tr>
-                                <th>Bit Layout</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Terminator: 4B]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">End-of-file marker (0xFFFFFFFF)</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="bit-layout">[Checksum: 4B]</div>
-                                </td>
-                                <td>
-                                    <div class="field-description">Final verification checksum</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Handle sidebar toggle
-        function initSidebarToggle() {
-            const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('sidebar-toggle-btn');
-            const overlayBtn = document.getElementById('toggle-overlay-btn');
-
-            function toggleSidebar() {
-                sidebar.classList.toggle('collapsed');
-                document.body.classList.toggle('sidebar-closed');
-            }
-
-            toggleBtn.addEventListener('click', toggleSidebar);
-            overlayBtn.addEventListener('click', toggleSidebar);
-        }
-
-        // Handle sidebar resize
-        function initSidebarResize() {
-            const sidebar = document.getElementById('sidebar');
-            const resizeHandle = document.getElementById('sidebar-resize-handle');
-            let isResizing = false;
-            let startX = 0;
-            let startWidth = 0;
-
-            resizeHandle.addEventListener('mousedown', function (e) {
-                isResizing = true;
-                startX = e.clientX;
-                startWidth = sidebar.offsetWidth;
-                document.body.style.cursor = 'col-resize';
-                document.body.style.userSelect = 'none';
-            });
-
-            document.addEventListener('mousemove', function (e) {
-                if (!isResizing) return;
-
-                const delta = e.clientX - startX;
-                const newWidth = Math.max(150, Math.min(600, startWidth + delta));
-                sidebar.style.width = newWidth + 'px';
-            });
-
-            document.addEventListener('mouseup', function () {
-                if (isResizing) {
-                    isResizing = false;
-                    document.body.style.cursor = 'auto';
-                    document.body.style.userSelect = 'auto';
+                function toggleSidebar() {
+                    sidebar.classList.toggle('collapsed');
+                    document.body.classList.toggle('sidebar-closed');
                 }
-            });
-        }
 
-        // Handle expand/collapse all
-        function initExpandCollapseAll() {
-            const expandBtn = document.getElementById('expand-all-btn');
-            const collapseBtn = document.getElementById('collapse-all-btn');
-            const navContainer = document.getElementById('sidebar-nav');
+                toggleBtn.addEventListener('click', toggleSidebar);
+                overlayBtn.addEventListener('click', toggleSidebar);
+            }
 
-            expandBtn.addEventListener('click', function () {
-                navContainer.querySelectorAll('ul.nested.collapsed').forEach(ul => {
-                    ul.classList.remove('collapsed');
-                    const toggle = ul.parentElement.querySelector('.nav-toggle');
-                    if (toggle) toggle.classList.remove('collapsed');
+            // Handle sidebar resize
+            function initSidebarResize() {
+                const sidebar = document.getElementById('sidebar');
+                const resizeHandle = document.getElementById('sidebar-resize-handle');
+                let isResizing = false;
+                let startX = 0;
+                let startWidth = 0;
+
+                resizeHandle.addEventListener('mousedown', function (e) {
+                    isResizing = true;
+                    startX = e.clientX;
+                    startWidth = sidebar.offsetWidth;
+                    document.body.style.cursor = 'col-resize';
+                    document.body.style.userSelect = 'none';
                 });
-            });
 
-            collapseBtn.addEventListener('click', function () {
-                navContainer.querySelectorAll('ul.nested:not(.collapsed)').forEach(ul => {
-                    ul.classList.add('collapsed');
-                    const toggle = ul.parentElement.querySelector('.nav-toggle');
-                    if (toggle) toggle.classList.add('collapsed');
+                document.addEventListener('mousemove', function (e) {
+                    if (!isResizing) return;
+
+                    const delta = e.clientX - startX;
+                    const newWidth = Math.max(150, Math.min(600, startWidth + delta));
+                    sidebar.style.width = newWidth + 'px';
                 });
-            });
-        }
 
-        // Handle global block visibility controls in the main pane
-        function initMainPaneControls() {
-            const expandBtn = document.getElementById('main-expand-all-btn');
-            const collapseBtn = document.getElementById('main-collapse-all-btn');
-            if (!expandBtn || !collapseBtn) return;
-
-            function setAllBlocks(collapsed) {
-                document.querySelectorAll('.block-content').forEach(content => {
-                    content.classList.toggle('collapsed', collapsed);
-                });
-                document.querySelectorAll('.block-header .block-toggle').forEach(toggle => {
-                    toggle.classList.toggle('collapsed', collapsed);
+                document.addEventListener('mouseup', function () {
+                    if (isResizing) {
+                        isResizing = false;
+                        document.body.style.cursor = 'auto';
+                        document.body.style.userSelect = 'auto';
+                    }
                 });
             }
 
-            expandBtn.addEventListener('click', () => setAllBlocks(false));
-            collapseBtn.addEventListener('click', () => setAllBlocks(true));
-        }
+            // Handle expand/collapse all
+            function initExpandCollapseAll() {
+                const expandBtn = document.getElementById('expand-all-btn');
+                const collapseBtn = document.getElementById('collapse-all-btn');
+                const navContainer = document.getElementById('sidebar-nav');
 
-        // Ensure a block and its ancestors are visible
-        function expandBlockHierarchy(header) {
-            if (!header) return;
+                expandBtn.addEventListener('click', function () {
+                    navContainer.querySelectorAll('ul.nested.collapsed').forEach(ul => {
+                        ul.classList.remove('collapsed');
+                        const toggle = ul.parentElement.querySelector('.nav-toggle');
+                        if (toggle) toggle.classList.remove('collapsed');
+                    });
+                });
 
-            const toggle = header.querySelector('.block-toggle');
-            if (toggle) toggle.classList.remove('collapsed');
+                collapseBtn.addEventListener('click', function () {
+                    navContainer.querySelectorAll('ul.nested:not(.collapsed)').forEach(ul => {
+                        ul.classList.add('collapsed');
+                        const toggle = ul.parentElement.querySelector('.nav-toggle');
+                        if (toggle) toggle.classList.add('collapsed');
+                    });
+                });
+            }
 
-            const contentId = header.dataset.contentId;
-            let content = contentId ? document.getElementById(contentId) : null;
-            if (!content || !content.classList.contains('block-content')) {
-                const nextEl = header.nextElementSibling;
-                if (nextEl && nextEl.classList.contains('block-content')) {
-                    content = nextEl;
+            // Handle global block visibility controls in the main pane
+            function initMainPaneControls() {
+                const expandBtn = document.getElementById('main-expand-all-btn');
+                const collapseBtn = document.getElementById('main-collapse-all-btn');
+                if (!expandBtn || !collapseBtn) return;
+
+                function setAllBlocks(collapsed) {
+                    document.querySelectorAll('.block-content').forEach(content => {
+                        content.classList.toggle('collapsed', collapsed);
+                    });
+                    document.querySelectorAll('.block-header .block-toggle').forEach(toggle => {
+                        toggle.classList.toggle('collapsed', collapsed);
+                    });
                 }
-            }
-            if (content) content.classList.remove('collapsed');
 
-            let parent = header.parentElement;
-            while (parent) {
-                if (parent.classList && parent.classList.contains('block-content')) {
-                    parent.classList.remove('collapsed');
-                    const parentHeader = parent.previousElementSibling;
-                    if (parentHeader && parentHeader.classList.contains('block-header')) {
-                        const parentToggle = parentHeader.querySelector('.block-toggle');
-                        if (parentToggle) parentToggle.classList.remove('collapsed');
+                expandBtn.addEventListener('click', () => setAllBlocks(false));
+                collapseBtn.addEventListener('click', () => setAllBlocks(true));
+            }
+
+            // Ensure a block and its ancestors are visible
+            function expandBlockHierarchy(header) {
+                if (!header) return;
+
+                const toggle = header.querySelector('.block-toggle');
+                if (toggle) toggle.classList.remove('collapsed');
+
+                const contentId = header.dataset.contentId;
+                let content = contentId ? document.getElementById(contentId) : null;
+                if (!content || !content.classList.contains('block-content')) {
+                    const nextEl = header.nextElementSibling;
+                    if (nextEl && nextEl.classList.contains('block-content')) {
+                        content = nextEl;
                     }
                 }
-                parent = parent.parentElement;
+                if (content) content.classList.remove('collapsed');
+
+                let parent = header.parentElement;
+                while (parent) {
+                    if (parent.classList && parent.classList.contains('block-content')) {
+                        parent.classList.remove('collapsed');
+                        const parentHeader = parent.previousElementSibling;
+                        if (parentHeader && parentHeader.classList.contains('block-header')) {
+                            const parentToggle = parentHeader.querySelector('.block-toggle');
+                            if (parentToggle) parentToggle.classList.remove('collapsed');
+                        }
+                    }
+                    parent = parent.parentElement;
+                }
             }
-        }
 
-        // Scroll the main content pane to a header after layout settles
-        function scrollHeaderIntoView(header, hash, options = {}) {
-            const mainContent = document.querySelector('.main-content');
-            if (!mainContent || !header) return;
-            const { updateHash = false } = options;
+            // Scroll the main content pane to a header after layout settles
+            function scrollHeaderIntoView(header, hash, options = {}) {
+                const mainContent = document.querySelector('.main-content');
+                if (!mainContent || !header) return;
+                const { updateHash = false } = options;
 
-            const scrollToHeader = () => {
-                const headerRect = header.getBoundingClientRect();
-                const mainRect = mainContent.getBoundingClientRect();
-                const targetTop = headerRect.top - mainRect.top + mainContent.scrollTop - 12;
-                mainContent.scrollTo({ top: targetTop, behavior: 'smooth' });
-                if (hash && updateHash) history.replaceState(null, '', hash);
-            };
+                const scrollToHeader = () => {
+                    const headerRect = header.getBoundingClientRect();
+                    const mainRect = mainContent.getBoundingClientRect();
+                    const targetTop = headerRect.top - mainRect.top + mainContent.scrollTop - 12;
+                    mainContent.scrollTo({ top: targetTop, behavior: 'smooth' });
+                    if (hash && updateHash) history.replaceState(null, '', hash);
+                };
 
-            // Wait for expansion reflow before measuring positions
-            requestAnimationFrame(() => requestAnimationFrame(scrollToHeader));
-        }
+                // Wait for expansion reflow before measuring positions
+                requestAnimationFrame(() => requestAnimationFrame(scrollToHeader));
+            }
 
-        // Reveal and optionally scroll to the section referenced by a hash
-        function revealHashTarget(hash, { scroll = false, updateHash = false } = {}) {
-            if (!hash || !hash.startsWith('#')) return;
-            const header = document.getElementById(hash.slice(1));
-            if (!header || !header.classList.contains('block-header')) return;
-
-            expandBlockHierarchy(header);
-            if (scroll) scrollHeaderIntoView(header, hash, { updateHash });
-        }
-
-        // Expand collapsed parents when navigating via sidebar links
-        function initNavLinkExpansion() {
-            const navContainer = document.getElementById('sidebar-nav');
-            if (!navContainer) return;
-
-            navContainer.addEventListener('click', function (event) {
-                const link = event.target.closest('a');
-                if (!link || !navContainer.contains(link)) return;
-
-                const hash = link.getAttribute('href');
+            // Reveal and optionally scroll to the section referenced by a hash
+            function revealHashTarget(hash, { scroll = false, updateHash = false } = {}) {
                 if (!hash || !hash.startsWith('#')) return;
-                event.preventDefault();
+                const header = document.getElementById(hash.slice(1));
+                if (!header || !header.classList.contains('block-header')) return;
 
-                revealHashTarget(hash, { scroll: true, updateHash: true });
-            });
-        }
-
-        // Handle scroll tracking for active section highlighting
-        function initScrollTracking() {
-            const mainContent = document.querySelector('.main-content');
-            const navLinks = document.querySelectorAll('.sidebar a');
-            const headers = Array.from(document.querySelectorAll('.block-header'));
-            // Return true if the element is inside any collapsed `.block-content`
-            function isInsideCollapsedAncestor(el) {
-                let node = el.parentElement;
-                while (node) {
-                    if (node.classList && node.classList.contains('block-content') && node.classList.contains('collapsed')) {
-                        return true;
-                    }
-                    node = node.parentElement;
-                }
-                return false;
+                expandBlockHierarchy(header);
+                if (scroll) scrollHeaderIntoView(header, hash, { updateHash });
             }
 
-            // Calculate header offset relative to the scroll container so we can
-            // keep highlighting even when the header is off-screen.
-            function getHeaderOffset(header) {
-                const headerRect = header.getBoundingClientRect();
-                const mainRect = mainContent.getBoundingClientRect();
-                return headerRect.top - mainRect.top + mainContent.scrollTop;
-            }
+            // Expand collapsed parents when navigating via sidebar links
+            function initNavLinkExpansion() {
+                const navContainer = document.getElementById('sidebar-nav');
+                if (!navContainer) return;
 
-            function findActiveHeader() {
-                const scrollTop = mainContent.scrollTop;
-                let bestAbove = null;
-                let bestBelow = null;
+                navContainer.addEventListener('click', function (event) {
+                    const link = event.target.closest('a');
+                    if (!link || !navContainer.contains(link)) return;
 
-                headers.forEach(header => {
-                    if (!header.id || isInsideCollapsedAncestor(header)) return;
-                    const offset = getHeaderOffset(header);
+                    const hash = link.getAttribute('href');
+                    if (!hash || !hash.startsWith('#')) return;
+                    event.preventDefault();
 
-                    if (offset <= scrollTop + 1) {
-                        if (!bestAbove || offset > bestAbove.offset) {
-                            bestAbove = { header, offset };
-                        }
-                    } else {
-                        if (!bestBelow || offset < bestBelow.offset) {
-                            bestBelow = { header, offset };
-                        }
-                    }
+                    revealHashTarget(hash, { scroll: true, updateHash: true });
                 });
-
-                return bestAbove ? bestAbove.header : (bestBelow ? bestBelow.header : null);
             }
 
-            const navWrapper = document.getElementById('sidebar-nav');
-            const navRoot = navWrapper ? navWrapper.querySelector('ul') : null;
-
-            function getVisibleNavLinkForHash(hash) {
-                const allLinks = Array.from(navLinks);
-                const direct = allLinks.find(l => l.hash === hash || l.getAttribute('href') === hash);
-                if (!direct) return null;
-
-                function isLinkHidden(link) {
-                    let ul = link.closest('ul');
-                    while (ul && ul !== navRoot) {
-                        if (ul.classList && ul.classList.contains('collapsed')) return true;
-                        ul = ul.parentElement ? ul.parentElement.closest('ul') : null;
+            // Handle scroll tracking for active section highlighting
+            function initScrollTracking() {
+                const mainContent = document.querySelector('.main-content');
+                const navLinks = document.querySelectorAll('.sidebar a');
+                const headers = Array.from(document.querySelectorAll('.block-header'));
+                // Return true if the element is inside any collapsed `.block-content`
+                function isInsideCollapsedAncestor(el) {
+                    let node = el.parentElement;
+                    while (node) {
+                        if (node.classList && node.classList.contains('block-content') && node.classList.contains('collapsed')) {
+                            return true;
+                        }
+                        node = node.parentElement;
                     }
                     return false;
                 }
 
-                if (!isLinkHidden(direct)) return direct;
-
-                let currentUl = direct.closest('ul');
-                while (currentUl && currentUl !== navRoot) {
-                    const parentLi = currentUl.parentElement;
-                    if (!parentLi) break;
-                    const parentLink = parentLi.querySelector('a');
-                    if (parentLink && !isLinkHidden(parentLink)) return parentLink;
-                    currentUl = parentLi.closest('ul');
+                // Calculate header offset relative to the scroll container so we can
+                // keep highlighting even when the header is off-screen.
+                function getHeaderOffset(header) {
+                    const headerRect = header.getBoundingClientRect();
+                    const mainRect = mainContent.getBoundingClientRect();
+                    return headerRect.top - mainRect.top + mainContent.scrollTop;
                 }
 
-                return allLinks.find(l => !isLinkHidden(l)) || null;
-            }
+                function findActiveHeader() {
+                    const scrollTop = mainContent.scrollTop;
+                    let bestAbove = null;
+                    let bestBelow = null;
 
-            function highlightActiveHeader() {
-                const activeHeader = findActiveHeader();
-                navLinks.forEach(l => l.classList.remove('active'));
-                if (!activeHeader) return;
+                    headers.forEach(header => {
+                        if (!header.id || isInsideCollapsedAncestor(header)) return;
+                        const offset = getHeaderOffset(header);
 
-                const match = getVisibleNavLinkForHash('#' + activeHeader.id);
-                if (match) match.classList.add('active');
-            }
-
-            // Throttle updates using requestAnimationFrame
-            let ticking = false;
-            function onScrollOrResize() {
-                if (!ticking) {
-                    ticking = true;
-                    window.requestAnimationFrame(() => {
-                        highlightActiveHeader();
-                        ticking = false;
+                        if (offset <= scrollTop + 1) {
+                            if (!bestAbove || offset > bestAbove.offset) {
+                                bestAbove = { header, offset };
+                            }
+                        } else {
+                            if (!bestBelow || offset < bestBelow.offset) {
+                                bestBelow = { header, offset };
+                            }
+                        }
                     });
+
+                    return bestAbove ? bestAbove.header : (bestBelow ? bestBelow.header : null);
                 }
-            }
 
-            mainContent.addEventListener('scroll', onScrollOrResize, { passive: true });
-            window.addEventListener('resize', onScrollOrResize);
+                const navWrapper = document.getElementById('sidebar-nav');
+                const navRoot = navWrapper ? navWrapper.querySelector('ul') : null;
 
-            highlightActiveHeader();
-        }
+                function getVisibleNavLinkForHash(hash) {
+                    const allLinks = Array.from(navLinks);
+                    const direct = allLinks.find(l => l.hash === hash || l.getAttribute('href') === hash);
+                    if (!direct) return null;
 
-        // Handle all block collapsing
-        function initCollapsibleBlocks() {
-            const headers = document.querySelectorAll('.block-header');
-            headers.forEach(header => {
-                header.addEventListener('click', function () {
-                    const contentId = this.dataset.contentId;
-                    let content = contentId ? document.getElementById(contentId) : null;
-                    if (!content || !content.classList.contains('block-content')) {
-                        const nextEl = this.nextElementSibling;
-                        content = nextEl && nextEl.classList.contains('block-content') ? nextEl : null;
+                    function isLinkHidden(link) {
+                        let ul = link.closest('ul');
+                        while (ul && ul !== navRoot) {
+                            if (ul.classList && ul.classList.contains('collapsed')) return true;
+                            ul = ul.parentElement ? ul.parentElement.closest('ul') : null;
+                        }
+                        return false;
                     }
-                    const toggle = this.querySelector('.block-toggle');
 
-                    if (content && toggle) {
-                        content.classList.toggle('collapsed');
-                        toggle.classList.toggle('collapsed');
+                    if (!isLinkHidden(direct)) return direct;
+
+                    let currentUl = direct.closest('ul');
+                    while (currentUl && currentUl !== navRoot) {
+                        const parentLi = currentUl.parentElement;
+                        if (!parentLi) break;
+                        const parentLink = parentLi.querySelector('a');
+                        if (parentLink && !isLinkHidden(parentLink)) return parentLink;
+                        currentUl = parentLi.closest('ul');
                     }
-                });
-            });
-        }
 
-        // Generate navigation from main content
-        function generateNavigation() {
-            const navContainer = document.getElementById('sidebar-nav');
-
-            // Apply section number to header element (id, data, and visible text)
-            function applySectionNumber(header, sectionNumber, blockId, labelText) {
-                header.dataset.sectionNumber = sectionNumber;
-                header.id = blockId;
-
-                // We expect each header to contain a <strong>
-                const strongEl = header.querySelector('strong');
-                const cleanLabel = (labelText || strongEl.textContent || '').trim();
-
-                const numSpan = document.createElement('span');
-                numSpan.className = 'section-number';
-                numSpan.textContent = sectionNumber;
-
-                strongEl.textContent = cleanLabel;
-                header.insertBefore(numSpan, strongEl);
-
-                const siblingContent = header.nextElementSibling;
-                if (siblingContent && siblingContent.classList.contains('block-content')) {
-                    const contentId = blockId + '-content';
-                    siblingContent.id = contentId;
-                    header.dataset.contentId = contentId;
-                } else {
-                    delete header.dataset.contentId;
+                    return allLinks.find(l => !isLinkHidden(l)) || null;
                 }
-            }
 
-            // Recursively build navigation tree from nested block structure
-            function buildNavTree(parentElement, depth = 0, prefix = []) {
-                const selector = depth === 0
-                    ? ':scope > .block-header.top-level'
-                    : ':scope > .block-header';
-                const blockHeaders = parentElement.querySelectorAll(selector);
-                if (blockHeaders.length === 0) return null;
+                function highlightActiveHeader() {
+                    const activeHeader = findActiveHeader();
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    if (!activeHeader) return;
 
-                const navList = document.createElement('ul');
+                    const match = getVisibleNavLinkForHash('#' + activeHeader.id);
+                    if (match) match.classList.add('active');
+                }
 
-                blockHeaders.forEach((header, index) => {
-                    const numberParts = prefix.concat(index + 1);
-                    const sectionNumber = numberParts.join('.');
-                    const strongEl = header.querySelector('strong');
-                    const text = strongEl ? strongEl.textContent.trim() : header.textContent.trim();
-                    const blockId = 'section-' + sectionNumber;
-
-                    applySectionNumber(header, sectionNumber, blockId, text);
-
-                    const navLi = document.createElement('li');
-                    const link = document.createElement('a');
-                    link.href = '#' + blockId;
-                    link.textContent = sectionNumber + ' ' + text;
-                    navLi.appendChild(link);
-
-                    const contentDiv = document.getElementById(blockId + '-content');
-                    const nestedContainer = contentDiv
-                        ? contentDiv.querySelector(':scope > .nested-blocks')
-                        : null;
-                    const nestedNav = nestedContainer
-                        ? buildNavTree(nestedContainer, depth + 1, numberParts)
-                        : null;
-
-                    if (nestedNav) {
-                        navLi.classList.add('has-nested');
-                        nestedNav.classList.add('nested');
-                        navLi.appendChild(nestedNav);
+                // Throttle updates using requestAnimationFrame
+                let ticking = false;
+                function onScrollOrResize() {
+                    if (!ticking) {
+                        ticking = true;
+                        window.requestAnimationFrame(() => {
+                            highlightActiveHeader();
+                            ticking = false;
+                        });
                     }
+                }
 
-                    navList.appendChild(navLi);
-                });
+                mainContent.addEventListener('scroll', onScrollOrResize, { passive: true });
+                window.addEventListener('resize', onScrollOrResize);
 
-                return navList;
+                highlightActiveHeader();
             }
 
-            const mainContent = document.querySelector('.main-content');
-            const navTree = buildNavTree(mainContent);
-            if (navTree) {
-                navContainer.appendChild(navTree);
-            }
+            // Handle all block collapsing
+            function initCollapsibleBlocks() {
+                const headers = document.querySelectorAll('.block-header');
+                headers.forEach(header => {
+                    header.addEventListener('click', function () {
+                        const contentId = this.dataset.contentId;
+                        let content = contentId ? document.getElementById(contentId) : null;
+                        if (!content || !content.classList.contains('block-content')) {
+                            const nextEl = this.nextElementSibling;
+                            content = nextEl && nextEl.classList.contains('block-content') ? nextEl : null;
+                        }
+                        const toggle = this.querySelector('.block-toggle');
 
-            // Add toggle functionality to all items with nested lists
-            function addToggleFunctionality(container) {
-                container.querySelectorAll('li.has-nested > a').forEach(link => {
-                    // Check if toggle already exists
-                    if (link.querySelector('.nav-toggle')) return;
-
-                    const toggle = document.createElement('span');
-                    toggle.classList.add('nav-toggle');
-                    toggle.textContent = '▼';
-                    link.insertBefore(toggle, link.firstChild);
-
-                    toggle.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const nestedUl = link.parentElement.querySelector('ul');
-                        if (nestedUl) {
-                            nestedUl.classList.toggle('collapsed');
+                        if (content && toggle) {
+                            content.classList.toggle('collapsed');
                             toggle.classList.toggle('collapsed');
                         }
                     });
                 });
             }
 
-            addToggleFunctionality(navContainer);
-        }
+            // Generate navigation from main content
+            function generateNavigation() {
+                const navContainer = document.getElementById('sidebar-nav');
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            initSidebarToggle();
-            initSidebarResize();
-            initExpandCollapseAll();
-            initMainPaneControls();
-            generateNavigation();
-            initNavLinkExpansion();
-            initCollapsibleBlocks();
-            initScrollTracking();
-            if (window.location.hash) {
-                revealHashTarget(window.location.hash, { scroll: true, updateHash: false });
+                // Apply section number to header element (id, data, and visible text)
+                function applySectionNumber(header, sectionNumber, blockId, labelText) {
+                    header.dataset.sectionNumber = sectionNumber;
+                    header.id = blockId;
+
+                    // We expect each header to contain a <strong>
+                    const strongEl = header.querySelector('strong');
+                    const cleanLabel = (labelText || strongEl.textContent || '').trim();
+
+                    const numSpan = document.createElement('span');
+                    numSpan.className = 'section-number';
+                    numSpan.textContent = sectionNumber;
+
+                    strongEl.textContent = cleanLabel;
+                    header.insertBefore(numSpan, strongEl);
+
+                    const siblingContent = header.nextElementSibling;
+                    if (siblingContent && siblingContent.classList.contains('block-content')) {
+                        const contentId = blockId + '-content';
+                        siblingContent.id = contentId;
+                        header.dataset.contentId = contentId;
+                    } else {
+                        delete header.dataset.contentId;
+                    }
+                }
+
+                // Recursively build navigation tree from nested block structure
+                function buildNavTree(parentElement, depth = 0, prefix = []) {
+                    const selector = depth === 0
+                        ? ':scope > .block-header.top-level'
+                        : ':scope > .block-header';
+                    const blockHeaders = parentElement.querySelectorAll(selector);
+                    if (blockHeaders.length === 0) return null;
+
+                    const navList = document.createElement('ul');
+
+                    blockHeaders.forEach((header, index) => {
+                        const numberParts = prefix.concat(index + 1);
+                        const sectionNumber = numberParts.join('.');
+                        const strongEl = header.querySelector('strong');
+                        const text = strongEl ? strongEl.textContent.trim() : header.textContent.trim();
+                        const blockId = 'section-' + sectionNumber;
+
+                        applySectionNumber(header, sectionNumber, blockId, text);
+
+                        const navLi = document.createElement('li');
+                        const link = document.createElement('a');
+                        link.href = '#' + blockId;
+                        link.textContent = sectionNumber + ' ' + text;
+                        navLi.appendChild(link);
+
+                        const contentDiv = document.getElementById(blockId + '-content');
+                        const nestedContainer = contentDiv
+                            ? contentDiv.querySelector(':scope > .nested-blocks')
+                            : null;
+                        const nestedNav = nestedContainer
+                            ? buildNavTree(nestedContainer, depth + 1, numberParts)
+                            : null;
+
+                        if (nestedNav) {
+                            navLi.classList.add('has-nested');
+                            nestedNav.classList.add('nested');
+                            navLi.appendChild(nestedNav);
+                        }
+
+                        navList.appendChild(navLi);
+                    });
+
+                    return navList;
+                }
+
+                const mainContent = document.querySelector('.main-content');
+                const navTree = buildNavTree(mainContent);
+                if (navTree) {
+                    navContainer.appendChild(navTree);
+                }
+
+                // Add toggle functionality to all items with nested lists
+                function addToggleFunctionality(container) {
+                    container.querySelectorAll('li.has-nested > a').forEach(link => {
+                        // Check if toggle already exists
+                        if (link.querySelector('.nav-toggle')) return;
+
+                        const toggle = document.createElement('span');
+                        toggle.classList.add('nav-toggle');
+                        toggle.textContent = '▼';
+                        link.insertBefore(toggle, link.firstChild);
+
+                        toggle.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const nestedUl = link.parentElement.querySelector('ul');
+                            if (nestedUl) {
+                                nestedUl.classList.toggle('collapsed');
+                                toggle.classList.toggle('collapsed');
+                            }
+                        });
+                    });
+                }
+
+                addToggleFunctionality(navContainer);
             }
-            window.addEventListener('hashchange', () => {
-                revealHashTarget(window.location.hash, { scroll: true, updateHash: false });
+
+            // Initialize on page load
+            document.addEventListener('DOMContentLoaded', function () {
+                initSidebarToggle();
+                initSidebarResize();
+                initExpandCollapseAll();
+                initMainPaneControls();
+                generateNavigation();
+                initNavLinkExpansion();
+                initCollapsibleBlocks();
+                initScrollTracking();
+                if (window.location.hash) {
+                    revealHashTarget(window.location.hash, { scroll: true, updateHash: false });
+                }
+                window.addEventListener('hashchange', () => {
+                    revealHashTarget(window.location.hash, { scroll: true, updateHash: false });
+                });
             });
-        });
-    </script>
+        </script>
+    </div>
 </body>
 
 </html>
