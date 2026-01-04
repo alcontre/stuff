@@ -72,6 +72,34 @@
         content: '▼ ';
     }
 
+    .myAAAnavDetails {
+        margin: 0.5rem 0;
+    }
+
+    .myAAAnavDetails summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.25em 0;
+        list-style: none;
+    }
+
+    .myAAAnavDetails summary::before {
+        content: '▶ ';
+        display: inline-block;
+        width: 1em;
+        text-align: center;
+        font-family: monospace;
+    }
+
+    .myAAAnavDetails[open] > summary::before {
+        content: '▼ ';
+    }
+
+    /* Indentation for nested elements ("details") */
+    .myAAAnavDetails > *:not(summary) {
+        margin-left: 1.5rem;
+    }
+
     .myAAAcontainer details > *:not(summary) {
         margin-left: 1.5rem;
     }
@@ -79,36 +107,48 @@
 <div class="myAAAcontainer">
     <nav aria-label="Navigation">
         <h2>Sections</h2>
-        <ul>
-            <li><a href="#myAAAfile-header">File Header</a>
-                <ul>
-                    <li><a href="#myAAAsignature">Signature</a></li>
-                    <li><a href="#myAAAversion">Version</a></li>
-                </ul>
-            </li>
-            <li><a href="#myAAAchunk-table">Chunk Table</a>
-                <ul>
-                    <li><a href="#myAAAchunk-entry">Chunk Entry</a>
-                        <ul>
-                            <li><a href="#myAAAchunk-type">Chunk Type</a></li>
-                            <li><a href="#myAAAchunk-offset">Chunk Offset</a></li>
-                            <li><a href="#myAAAchunk-size">Chunk Size</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li><a href="#myAAApayload">Payload</a>
-                <ul>
-                    <li><a href="#myAAAmetadata-block">Metadata Block</a></li>
-                    <li><a href="#myAAAdata-block">Data Block</a>
-                        <ul>
-                            <li><a href="#myAAArecord-header">Record Header</a></li>
-                            <li><a href="#myAAArecord-body">Record Body</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        
+        <details class="myAAAnavDetails" open>
+            <summary><a href="#myAAAfile-header">File Header</a></summary>
+            <details class="myAAAnavDetails">
+                <summary><a href="#myAAAsignature">Signature</a></summary>
+            </details>
+            <details class="myAAAnavDetails">
+                <summary><a href="#myAAAversion">Version</a></summary>
+            </details>
+        </details>
+
+        <details class="myAAAnavDetails" open>
+            <summary><a href="#myAAAchunk-table">Chunk Table</a></summary>
+            <details class="myAAAnavDetails">
+                <summary><a href="#myAAAchunk-entry">Chunk Entry</a></summary>
+                <details class="myAAAnavDetails">
+                    <summary><a href="#myAAAchunk-type">Chunk Type</a></summary>
+                </details>
+                <details class="myAAAnavDetails">
+                    <summary><a href="#myAAAchunk-offset">Chunk Offset</a></summary>
+                </details>
+                <details class="myAAAnavDetails">
+                    <summary><a href="#myAAAchunk-size">Chunk Size</a></summary>
+                </details>
+            </details>
+        </details>
+
+        <details class="myAAAnavDetails" open>
+            <summary><a href="#myAAApayload">Payload</a></summary>
+            <details class="myAAAnavDetails">
+                <summary><a href="#myAAAmetadata-block">Metadata Block</a></summary>
+            </details>
+            <details class="myAAAnavDetails">
+                <summary><a href="#myAAAdata-block">Data Block</a></summary>
+                <details class="myAAAnavDetails">
+                    <summary><a href="#myAAArecord-header">Record Header</a></summary>
+                </details>
+                <details class="myAAAnavDetails">
+                    <summary><a href="#myAAArecord-body">Record Body</a></summary>
+                </details>
+            </details>
+        </details>
     </nav>
 
     <main>
