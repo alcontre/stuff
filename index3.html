@@ -57,6 +57,17 @@
         cursor: pointer;
         font-weight: bold;
         padding: 0.5em;
+        list-style: none;
+    }
+
+    .myAAAcontainer details summary::before {
+        content: 'x ';
+        display: inline-block;
+        width: 1em;
+    }
+
+    .myAAAcontainer details[open] summary::before {
+        content: 'x ';
     }
 
     .myAAAcontainer details > *:not(summary) {
