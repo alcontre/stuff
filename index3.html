@@ -33,9 +33,15 @@
         overflow-y: auto;
     }
 
-    .myAAAcontainer main h1,
-    .myAAAcontainer main h2 {
+    .myAAAcontainer main h1 {
         margin-top: 0;
+    }
+
+    .myAAAsectionTitle {
+        display: inline;
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
     }
 
     .myAAAcontainer ul {
@@ -50,36 +56,7 @@
     .myAAAcontainer details summary {
         cursor: pointer;
         font-weight: bold;
-        padding: 0.5rem 0;
-        list-style: none;
-        display: flex;
-        align-items: center;
-    }
-
-    .myAAAcontainer details summary h2,
-    .myAAAcontainer details summary h3,
-    .myAAAcontainer details summary h4 {
-        display: inline;
-        margin: 0;
-        padding: 0;
-        font-weight: inherit;
-        font-size: inherit;
-    }
-
-    .myAAAcontainer details summary::-webkit-details-marker {
-        display: none;
-    }
-
-    .myAAAcontainer details summary::before {
-        content: '▶ ';
-        display: inline-block;
-        margin-right: 0.5rem;
-        width: 0.5rem;
-        text-align: center;
-    }
-
-    .myAAAcontainer details[open] summary::before {
-        content: '▼';
+        padding: 0.5em;
     }
 
     .myAAAcontainer details > *:not(summary) {
@@ -124,65 +101,65 @@
     <main>
         <h1>Binary Data Format Description</h1>
         <details id="myAAAfile-header" open>
-            <summary><h2>File Header</h2></summary>
+            <summary><span class="myAAAsectionTitle">File Header</span></summary>
             <p>The file header contains metadata about the binary format structure and version.</p>
 
             <details id="myAAAsignature">
-                <summary><h3>Signature</h3></summary>
+                <summary><span class="myAAAsectionTitle">Signature</span></summary>
                 <p>Magic bytes indicating format identity.</p>
             </details>
 
             <details id="myAAAversion">
-                <summary><h3>Version</h3></summary>
+                <summary><span class="myAAAsectionTitle">Version</span></summary>
                 <p>16-bit integer identifying schema revision.</p>
             </details>
         </details>
 
         <details id="myAAAchunk-table" open>
-            <summary><h2>Chunk Table</h2></summary>
+            <summary><span class="myAAAsectionTitle">Chunk Table</span></summary>
             <p>The chunk table provides an index of all data chunks within the file.</p>
 
             <details id="myAAAchunk-entry">
-                <summary><h3>Chunk Entry</h3></summary>
+                <summary><span class="myAAAsectionTitle">Chunk Entry</span></summary>
                 <p>Repeated entries describing each payload chunk.</p>
 
                 <details id="myAAAchunk-type">
-                    <summary><h4>Chunk Type</h4></summary>
+                    <summary><span class="myAAAsectionTitle">Chunk Type</span></summary>
                     <p>Enumerated value describing purpose.</p>
                 </details>
 
                 <details id="myAAAchunk-offset">
-                    <summary><h4>Chunk Offset</h4></summary>
+                    <summary><span class="myAAAsectionTitle">Chunk Offset</span></summary>
                     <p>32-bit offset from file start.</p>
                 </details>
 
                 <details id="myAAAchunk-size">
-                    <summary><h4>Chunk Size</h4></summary>
+                    <summary><span class="myAAAsectionTitle">Chunk Size</span></summary>
                     <p>32-bit length in bytes.</p>
                 </details>
             </details>
         </details>
 
         <details id="myAAApayload" open>
-            <summary><h2>Payload</h2></summary>
+            <summary><span class="myAAAsectionTitle">Payload</span></summary>
             <p>The payload section contains the actual data content organized into structured blocks.</p>
 
             <details id="myAAAmetadata-block">
-                <summary><h3>Metadata Block</h3></summary>
+                <summary><span class="myAAAsectionTitle">Metadata Block</span></summary>
                 <p>Optional key/value pairs with UTF-8 strings.</p>
             </details>
 
             <details id="myAAAdata-block">
-                <summary><h3>Data Block</h3></summary>
+                <summary><span class="myAAAsectionTitle">Data Block</span></summary>
                 <p>One or more records of the primary content.</p>
 
                 <details id="myAAArecord-header">
-                    <summary><h4>Record Header</h4></summary>
+                    <summary><span class="myAAAsectionTitle">Record Header</span></summary>
                     <p>Flags and length for each record.</p>
                 </details>
 
                 <details id="myAAArecord-body">
-                    <summary><h4>Record Body</h4></summary>
+                    <summary><span class="myAAAsectionTitle">Record Body</span></summary>
                     <p>Raw bytes interpreted per chunk type.</p>
                 </details>
             </details>
