@@ -1,82 +1,148 @@
 <style>
-  .myAAAcontainer { display: flex; min-height: 100vh; }
-  .myAAAcontainer nav { width: 260px; border-right: 1px solid #ccc; padding: 1rem; overflow-y: auto; background-color: #2c3e50; color: #ecf0f1; }
-  .myAAAcontainer nav h2 { margin-top: 0; }
-  .myAAAcontainer nav a { color: #3498db; text-decoration: none; }
-  .myAAAcontainer nav a:hover { color: #5dade2; text-decoration: underline; }
-  .myAAAcontainer main { flex: 1; padding: 1.5rem; overflow-y: auto; }
-  .myAAAcontainer main h1, .myAAAcontainer main h2 { margin-top: 0; }
-  .myAAAcontainer ul { margin: 0.25rem 0 0.5rem 1.25rem; padding: 0; }
+    .myAAAcontainer {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .myAAAcontainer nav {
+        width: 260px;
+        border-right: 1px solid #ccc;
+        padding: 1rem;
+        overflow-y: auto;
+        background-color: #2c3e50;
+        color: #ecf0f1;
+    }
+
+    .myAAAcontainer nav h2 {
+        margin-top: 0;
+    }
+
+    .myAAAcontainer nav a {
+        color: #3498db;
+        text-decoration: none;
+    }
+
+    .myAAAcontainer nav a:hover {
+        color: #5dade2;
+        text-decoration: underline;
+    }
+
+    .myAAAcontainer main {
+        flex: 1;
+        padding: 1.5rem;
+        overflow-y: auto;
+    }
+
+    .myAAAcontainer main h1,
+    .myAAAcontainer main h2 {
+        margin-top: 0;
+    }
+
+    .myAAAcontainer ul {
+        margin: 0.25rem 0 0.5rem 1.25rem;
+        padding: 0;
+    }
 </style>
 <div class="myAAAcontainer">
-  <nav aria-label="Navigation">
-    <h2>Sections</h2>
-    <ul>
-      <li><a href="#myAAAfile-header">File Header</a>
+    <nav aria-label="Navigation">
+        <h2>Sections</h2>
         <ul>
-          <li><a href="#myAAAsignature">Signature</a></li>
-          <li><a href="#myAAAversion">Version</a></li>
+            <li><a href="#myAAAfile-header">File Header</a>
+                <ul>
+                    <li><a href="#myAAAsignature">Signature</a></li>
+                    <li><a href="#myAAAversion">Version</a></li>
+                </ul>
+            </li>
+            <li><a href="#myAAAchunk-table">Chunk Table</a>
+                <ul>
+                    <li><a href="#myAAAchunk-entry">Chunk Entry</a>
+                        <ul>
+                            <li><a href="#myAAAchunk-type">Chunk Type</a></li>
+                            <li><a href="#myAAAchunk-offset">Chunk Offset</a></li>
+                            <li><a href="#myAAAchunk-size">Chunk Size</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#myAAApayload">Payload</a>
+                <ul>
+                    <li><a href="#myAAAmetadata-block">Metadata Block</a></li>
+                    <li><a href="#myAAAdata-block">Data Block</a>
+                        <ul>
+                            <li><a href="#myAAArecord-header">Record Header</a></li>
+                            <li><a href="#myAAArecord-body">Record Body</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
         </ul>
-      </li>
-      <li><a href="#myAAAchunk-table">Chunk Table</a>
-        <ul>
-          <li><a href="#myAAAchunk-entry">Chunk Entry</a>
-            <ul>
-              <li><a href="#myAAAchunk-type">Chunk Type</a></li>
-              <li><a href="#myAAAchunk-offset">Chunk Offset</a></li>
-              <li><a href="#myAAAchunk-size">Chunk Size</a></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li><a href="#myAAApayload">Payload</a>
-        <ul>
-          <li><a href="#myAAAmetadata-block">Metadata Block</a></li>
-          <li><a href="#myAAAdata-block">Data Block</a>
-            <ul>
-              <li><a href="#myAAArecord-header">Record Header</a></li>
-              <li><a href="#myAAArecord-body">Record Body</a></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
+    </nav>
 
-  <main>
-    <h1>Binary Data Format Description</h1>
-    <section id="myAAAfile-header">
-      <h2>File Header</h2>
-      <ul>
-        <li id="myAAAsignature"><strong>Signature:</strong> magic bytes indicating format identity.</li>
-        <li id="myAAAversion"><strong>Version:</strong> 16-bit integer identifying schema revision.</li>
-      </ul>
-    </section>
+    <main>
+        <h1>Binary Data Format Description</h1>
+        <section id="myAAAfile-header">
+            <h2>File Header</h2>
+            <p>The file header contains metadata about the binary format structure and version.</p>
 
-    <section id="myAAAchunk-table">
-      <h2>Chunk Table</h2>
-      <ul>
-        <li id="myAAAchunk-entry"><strong>Chunk Entry:</strong> repeated entries describing each payload chunk.
-          <ul>
-            <li id="myAAAchunk-type"><strong>Chunk Type:</strong> enumerated value describing purpose.</li>
-            <li id="myAAAchunk-offset"><strong>Chunk Offset:</strong> 32-bit offset from file start.</li>
-            <li id="myAAAchunk-size"><strong>Chunk Size:</strong> 32-bit length in bytes.</li>
-          </ul>
-        </li>
-      </ul>
-    </section>
+            <section id="myAAAsignature">
+                <h3>Signature</h3>
+                <p>Magic bytes indicating format identity.</p>
+            </section>
 
-    <section id="myAAApayload">
-      <h2>Payload</h2>
-      <ul>
-        <li id="myAAAmetadata-block"><strong>Metadata Block:</strong> optional key/value pairs with UTF-8 strings.</li>
-        <li id="myAAAdata-block"><strong>Data Block:</strong> one or more records of the primary content.
-          <ul>
-            <li id="myAAArecord-header"><strong>Record Header:</strong> flags and length for each record.</li>
-            <li id="myAAArecord-body"><strong>Record Body:</strong> raw bytes interpreted per chunk type.</li>
-          </ul>
-        </li>
-      </ul>
-    </section>
-  </main>
+            <section id="myAAAversion">
+                <h3>Version</h3>
+                <p>16-bit integer identifying schema revision.</p>
+            </section>
+        </section>
+
+        <section id="myAAAchunk-table">
+            <h2>Chunk Table</h2>
+            <p>The chunk table provides an index of all data chunks within the file.</p>
+
+            <section id="myAAAchunk-entry">
+                <h3>Chunk Entry</h3>
+                <p>Repeated entries describing each payload chunk.</p>
+
+                <section id="myAAAchunk-type">
+                    <h4>Chunk Type</h4>
+                    <p>Enumerated value describing purpose.</p>
+                </section>
+
+                <section id="myAAAchunk-offset">
+                    <h4>Chunk Offset</h4>
+                    <p>32-bit offset from file start.</p>
+                </section>
+
+                <section id="myAAAchunk-size">
+                    <h4>Chunk Size</h4>
+                    <p>32-bit length in bytes.</p>
+                </section>
+            </section>
+        </section>
+
+        <section id="myAAApayload">
+            <h2>Payload</h2>
+            <p>The payload section contains the actual data content organized into structured blocks.</p>
+
+            <section id="myAAAmetadata-block">
+                <h3>Metadata Block</h3>
+                <p>Optional key/value pairs with UTF-8 strings.</p>
+            </section>
+
+            <section id="myAAAdata-block">
+                <h3>Data Block</h3>
+                <p>One or more records of the primary content.</p>
+
+                <section id="myAAArecord-header">
+                    <h4>Record Header</h4>
+                    <p>Flags and length for each record.</p>
+                </section>
+
+                <section id="myAAArecord-body">
+                    <h4>Record Body</h4>
+                    <p>Raw bytes interpreted per chunk type.</p>
+                </section>
+            </section>
+        </section>
+    </main>
 </div>
