@@ -1,46 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Binary Format Explorer</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      display: flex;
-      min-height: 100vh;
-    }
-    nav {
-      width: 260px;
-      border-right: 1px solid #ccc;
-      padding: 1rem;
-      overflow-y: auto;
-    }
-    main {
-      flex: 1;
-      padding: 1.5rem;
-      overflow-y: auto;
-    }
-    h1, h2, h3 { margin-top: 0; }
-    ul { margin: 0.25rem 0 0.5rem 1.25rem; padding: 0; }
-  </style>
-</head>
-<body>
-  <nav aria-label="Navigation">
-    <h2>Sections</h2>
-    <ul>
+<div style="display: flex; min-height: 100vh;">
+  <nav aria-label="Navigation" style="width: 260px; border-right: 1px solid #ccc; padding: 1rem; overflow-y: auto;">
+    <h2 style="margin-top: 0;">Sections</h2>
+    <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
       <li><a href="#file-header">File Header</a>
-        <ul>
+        <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
           <li><a href="#signature">Signature</a></li>
           <li><a href="#version">Version</a></li>
         </ul>
       </li>
       <li><a href="#chunk-table">Chunk Table</a>
-        <ul>
+        <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
           <li><a href="#chunk-entry">Chunk Entry</a>
-            <ul>
+            <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
               <li><a href="#chunk-type">Chunk Type</a></li>
               <li><a href="#chunk-offset">Chunk Offset</a></li>
               <li><a href="#chunk-size">Chunk Size</a></li>
@@ -49,10 +20,10 @@
         </ul>
       </li>
       <li><a href="#payload">Payload</a>
-        <ul>
+        <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
           <li><a href="#metadata-block">Metadata Block</a></li>
           <li><a href="#data-block">Data Block</a>
-            <ul>
+            <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
               <li><a href="#record-header">Record Header</a></li>
               <li><a href="#record-body">Record Body</a></li>
             </ul>
@@ -62,21 +33,21 @@
     </ul>
   </nav>
 
-  <main>
-    <h1>Binary Data Format Description</h1>
+  <main style="flex: 1; padding: 1.5rem; overflow-y: auto;">
+    <h1 style="margin-top: 0;">Binary Data Format Description</h1>
     <section id="file-header">
-      <h2>File Header</h2>
-      <ul>
+      <h2 style="margin-top: 0;">File Header</h2>
+      <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
         <li id="signature"><strong>Signature:</strong> magic bytes indicating format identity.</li>
         <li id="version"><strong>Version:</strong> 16-bit integer identifying schema revision.</li>
       </ul>
     </section>
 
     <section id="chunk-table">
-      <h2>Chunk Table</h2>
-      <ul>
+      <h2 style="margin-top: 0;">Chunk Table</h2>
+      <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
         <li id="chunk-entry"><strong>Chunk Entry:</strong> repeated entries describing each payload chunk.
-          <ul>
+          <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
             <li id="chunk-type"><strong>Chunk Type:</strong> enumerated value describing purpose.</li>
             <li id="chunk-offset"><strong>Chunk Offset:</strong> 32-bit offset from file start.</li>
             <li id="chunk-size"><strong>Chunk Size:</strong> 32-bit length in bytes.</li>
@@ -86,11 +57,11 @@
     </section>
 
     <section id="payload">
-      <h2>Payload</h2>
-      <ul>
+      <h2 style="margin-top: 0;">Payload</h2>
+      <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
         <li id="metadata-block"><strong>Metadata Block:</strong> optional key/value pairs with UTF-8 strings.</li>
         <li id="data-block"><strong>Data Block:</strong> one or more records of the primary content.
-          <ul>
+          <ul style="margin: 0.25rem 0 0.5rem 1.25rem; padding: 0;">
             <li id="record-header"><strong>Record Header:</strong> flags and length for each record.</li>
             <li id="record-body"><strong>Record Body:</strong> raw bytes interpreted per chunk type.</li>
           </ul>
@@ -98,5 +69,4 @@
       </ul>
     </section>
   </main>
-</body>
-</html>
+</div>
