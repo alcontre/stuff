@@ -61,13 +61,15 @@
     }
 
     .myAAAcontainer details summary::before {
-        content: 'x ';
+        content: '▶ ';
         display: inline-block;
         width: 1em;
+        text-align: center;
+        font-family: monospace;
     }
 
     .myAAAcontainer details[open] summary::before {
-        content: 'x ';
+        content: '▼ ';
     }
 
     .myAAAcontainer details > *:not(summary) {
