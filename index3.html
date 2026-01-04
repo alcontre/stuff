@@ -1,39 +1,39 @@
 <style>
-  .container { display: flex; min-height: 100vh; }
-  nav { width: 260px; border-right: 1px solid #ccc; padding: 1rem; overflow-y: auto; }
-  nav h2 { margin-top: 0; }
-  main { flex: 1; padding: 1.5rem; overflow-y: auto; }
-  main h1, main h2 { margin-top: 0; }
-  ul { margin: 0.25rem 0 0.5rem 1.25rem; padding: 0; }
+  .myAAAcontainer { display: flex; min-height: 100vh; }
+  .myAAAcontainer nav { width: 260px; border-right: 1px solid #ccc; padding: 1rem; overflow-y: auto; }
+  .myAAAcontainer nav h2 { margin-top: 0; }
+  .myAAAcontainer main { flex: 1; padding: 1.5rem; overflow-y: auto; }
+  .myAAAcontainer main h1, .myAAAcontainer main h2 { margin-top: 0; }
+  .myAAAcontainer ul { margin: 0.25rem 0 0.5rem 1.25rem; padding: 0; }
 </style>
-<div class="container">
+<div class="myAAAcontainer">
   <nav aria-label="Navigation">
     <h2>Sections</h2>
     <ul>
-      <li><a href="#file-header">File Header</a>
+      <li><a href="#myAAAfile-header">File Header</a>
         <ul>
-          <li><a href="#signature">Signature</a></li>
-          <li><a href="#version">Version</a></li>
+          <li><a href="#myAAAsignature">Signature</a></li>
+          <li><a href="#myAAAversion">Version</a></li>
         </ul>
       </li>
-      <li><a href="#chunk-table">Chunk Table</a>
+      <li><a href="#myAAAchunk-table">Chunk Table</a>
         <ul>
-          <li><a href="#chunk-entry">Chunk Entry</a>
+          <li><a href="#myAAAchunk-entry">Chunk Entry</a>
             <ul>
-              <li><a href="#chunk-type">Chunk Type</a></li>
-              <li><a href="#chunk-offset">Chunk Offset</a></li>
-              <li><a href="#chunk-size">Chunk Size</a></li>
+              <li><a href="#myAAAchunk-type">Chunk Type</a></li>
+              <li><a href="#myAAAchunk-offset">Chunk Offset</a></li>
+              <li><a href="#myAAAchunk-size">Chunk Size</a></li>
             </ul>
           </li>
         </ul>
       </li>
-      <li><a href="#payload">Payload</a>
+      <li><a href="#myAAApayload">Payload</a>
         <ul>
-          <li><a href="#metadata-block">Metadata Block</a></li>
-          <li><a href="#data-block">Data Block</a>
+          <li><a href="#myAAAmetadata-block">Metadata Block</a></li>
+          <li><a href="#myAAAdata-block">Data Block</a>
             <ul>
-              <li><a href="#record-header">Record Header</a></li>
-              <li><a href="#record-body">Record Body</a></li>
+              <li><a href="#myAAArecord-header">Record Header</a></li>
+              <li><a href="#myAAArecord-body">Record Body</a></li>
             </ul>
           </li>
         </ul>
@@ -43,35 +43,35 @@
 
   <main>
     <h1>Binary Data Format Description</h1>
-    <section id="file-header">
+    <section id="myAAAfile-header">
       <h2>File Header</h2>
       <ul>
-        <li id="signature"><strong>Signature:</strong> magic bytes indicating format identity.</li>
-        <li id="version"><strong>Version:</strong> 16-bit integer identifying schema revision.</li>
+        <li id="myAAAsignature"><strong>Signature:</strong> magic bytes indicating format identity.</li>
+        <li id="myAAAversion"><strong>Version:</strong> 16-bit integer identifying schema revision.</li>
       </ul>
     </section>
 
-    <section id="chunk-table">
+    <section id="myAAAchunk-table">
       <h2>Chunk Table</h2>
       <ul>
-        <li id="chunk-entry"><strong>Chunk Entry:</strong> repeated entries describing each payload chunk.
+        <li id="myAAAchunk-entry"><strong>Chunk Entry:</strong> repeated entries describing each payload chunk.
           <ul>
-            <li id="chunk-type"><strong>Chunk Type:</strong> enumerated value describing purpose.</li>
-            <li id="chunk-offset"><strong>Chunk Offset:</strong> 32-bit offset from file start.</li>
-            <li id="chunk-size"><strong>Chunk Size:</strong> 32-bit length in bytes.</li>
+            <li id="myAAAchunk-type"><strong>Chunk Type:</strong> enumerated value describing purpose.</li>
+            <li id="myAAAchunk-offset"><strong>Chunk Offset:</strong> 32-bit offset from file start.</li>
+            <li id="myAAAchunk-size"><strong>Chunk Size:</strong> 32-bit length in bytes.</li>
           </ul>
         </li>
       </ul>
     </section>
 
-    <section id="payload">
+    <section id="myAAApayload">
       <h2>Payload</h2>
       <ul>
-        <li id="metadata-block"><strong>Metadata Block:</strong> optional key/value pairs with UTF-8 strings.</li>
-        <li id="data-block"><strong>Data Block:</strong> one or more records of the primary content.
+        <li id="myAAAmetadata-block"><strong>Metadata Block:</strong> optional key/value pairs with UTF-8 strings.</li>
+        <li id="myAAAdata-block"><strong>Data Block:</strong> one or more records of the primary content.
           <ul>
-            <li id="record-header"><strong>Record Header:</strong> flags and length for each record.</li>
-            <li id="record-body"><strong>Record Body:</strong> raw bytes interpreted per chunk type.</li>
+            <li id="myAAArecord-header"><strong>Record Header:</strong> flags and length for each record.</li>
+            <li id="myAAArecord-body"><strong>Record Body:</strong> raw bytes interpreted per chunk type.</li>
           </ul>
         </li>
       </ul>
