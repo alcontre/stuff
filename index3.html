@@ -44,23 +44,18 @@
         font-weight: bold;
     }
 
-    .myAAAcontainer ul {
-        margin: 0.25rem 0 0.5rem 1.25rem;
-        padding: 0;
-    }
-
-    .myAAAcontainer details {
+    .myAAAcontainer main details {
         margin: 1rem 0;
     }
 
-    .myAAAcontainer details summary {
+    .myAAAcontainer main details summary {
         cursor: pointer;
         font-weight: bold;
         padding: 0.5em;
         list-style: none;
     }
 
-    .myAAAcontainer details summary::before {
+    .myAAAcontainer main details summary::before {
         content: '▶ ';
         display: inline-block;
         width: 1em;
@@ -68,22 +63,26 @@
         font-family: monospace;
     }
 
-    .myAAAcontainer details[open] > summary::before {
+    .myAAAcontainer main details[open] > summary::before {
         content: '▼ ';
     }
 
-    .myAAAnavDetails {
+    .myAAAcontainer main details > *:not(summary) {
+        margin-left: 1.5rem;
+    }
+
+    .myAAAcontainer nav details {
         margin: 0.5rem 0;
     }
 
-    .myAAAnavDetails summary {
+    .myAAAcontainer nav details summary {
         cursor: pointer;
         font-weight: bold;
         padding: 0.25em 0;
         list-style: none;
     }
 
-    .myAAAnavDetails summary::before {
+    .myAAAcontainer nav details summary::before {
         content: '▶ ';
         display: inline-block;
         width: 1em;
@@ -91,16 +90,12 @@
         font-family: monospace;
     }
 
-    .myAAAnavDetails[open] > summary::before {
+    .myAAAcontainer nav details[open] > summary::before {
         content: '▼ ';
     }
 
     /* Indentation for nested elements ("details") */
-    .myAAAnavDetails > *:not(summary) {
-        margin-left: 1.5rem;
-    }
-
-    .myAAAcontainer details > *:not(summary) {
+    .myAAAcontainer nav details > *:not(summary) {
         margin-left: 1.5rem;
     }
 </style>
@@ -108,43 +103,43 @@
     <nav aria-label="Navigation">
         <h2>Sections</h2>
         
-        <details class="myAAAnavDetails" open>
+        <details open>
             <summary><a href="#myAAAfile-header">File Header</a></summary>
-            <details class="myAAAnavDetails">
+            <details>
                 <summary><a href="#myAAAsignature">Signature</a></summary>
             </details>
-            <details class="myAAAnavDetails">
+            <details>
                 <summary><a href="#myAAAversion">Version</a></summary>
             </details>
         </details>
 
-        <details class="myAAAnavDetails" open>
+        <details open>
             <summary><a href="#myAAAchunk-table">Chunk Table</a></summary>
-            <details class="myAAAnavDetails">
+            <details>
                 <summary><a href="#myAAAchunk-entry">Chunk Entry</a></summary>
-                <details class="myAAAnavDetails">
+                <details>
                     <summary><a href="#myAAAchunk-type">Chunk Type</a></summary>
                 </details>
-                <details class="myAAAnavDetails">
+                <details>
                     <summary><a href="#myAAAchunk-offset">Chunk Offset</a></summary>
                 </details>
-                <details class="myAAAnavDetails">
+                <details>
                     <summary><a href="#myAAAchunk-size">Chunk Size</a></summary>
                 </details>
             </details>
         </details>
 
-        <details class="myAAAnavDetails" open>
+        <details open>
             <summary><a href="#myAAApayload">Payload</a></summary>
-            <details class="myAAAnavDetails">
+            <details>
                 <summary><a href="#myAAAmetadata-block">Metadata Block</a></summary>
             </details>
-            <details class="myAAAnavDetails">
+            <details>
                 <summary><a href="#myAAAdata-block">Data Block</a></summary>
-                <details class="myAAAnavDetails">
+                <details>
                     <summary><a href="#myAAArecord-header">Record Header</a></summary>
                 </details>
-                <details class="myAAAnavDetails">
+                <details>
                     <summary><a href="#myAAArecord-body">Record Body</a></summary>
                 </details>
             </details>
