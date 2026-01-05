@@ -1,14 +1,25 @@
 <style>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
     .myAAAcontainer {
         display: flex;
+        align-items: flex-start;
         min-height: 100vh;
+        width: 100%;
+        overflow: visible;
     }
 
     .myAAAcontainer nav {
         width: 260px;
         position: sticky;
         top: 0;
-        height: 100vh;
+        z-index: 10;
+        max-height: 100vh;
         border-right: 1px solid #ccc;
         padding: 1rem;
         overflow-y: auto;
@@ -33,7 +44,8 @@
     .myAAAcontainer main {
         flex: 1;
         padding: 1.5rem;
-        overflow-y: auto;
+        min-height: 100vh;
+        overflow: visible;
     }
 
     .myAAAcontainer main h1 {
