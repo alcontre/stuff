@@ -80,7 +80,10 @@
         margin: 0.5rem 0;
     }
 
-    .myAAAcontainer nav details summary {
+    /* The nav pane consists of summary/detail elements mirroring the main panel,
+    and divs for leaf nodes (which do not have the ::before arrow) */
+    .myAAAcontainer nav details summary,
+    .myAAAcontainer nav div {
         cursor: pointer;
         font-weight: bold;
         padding: 0.25em 0;
@@ -122,7 +125,7 @@
 
                 // Check if original detail has child details
                 const nestedDetails = Array.from(detail.children).filter(child => child.tagName === 'DETAILS');
-                
+
                 if (nestedDetails.length > 0) {
                     // Parent node - create details element
                     const detailsNav = document.createElement('details');
@@ -134,7 +137,7 @@
                     summaryNav.appendChild(link);
                     detailsNav.appendChild(summaryNav);
                     detailsNav.setAttribute('open', '');
-                    
+
                     // Recursively build nav for nested details
                     buildNav(detail, detailsNav);
                     targetContainer.appendChild(detailsNav);
