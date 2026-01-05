@@ -110,17 +110,13 @@
 </style>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const mainElement = document.querySelector('.myAAAcontainer main');
-        const navContainer = document.createElement('div');
-        navContainer.id = 'myAAAnavContainer';
 
         // Find all details elements in main and build nav
         function buildNav(parent, targetContainer) {
             const childDetails = Array.from(parent.children).filter(child => child.tagName === 'DETAILS');
 
             childDetails.forEach(detail => {
-                const summary = detail.querySelector(':scope > summary');
-                const titleSpan = summary.querySelector('.myAAAsectionTitle');
+                const titleSpan = detail.querySelector(':scope > summary .myAAAsectionTitle');
                 const id = detail.id;
                 const text = titleSpan ? titleSpan.textContent : '';
 
@@ -146,6 +142,9 @@
             });
         }
 
+        const mainElement = document.querySelector('.myAAAcontainer main');
+        const navContainer = document.createElement('div');
+        navContainer.id = 'myAAAnavContainer';
         buildNav(mainElement, navContainer);
 
         // Insert the generated nav before the main details
