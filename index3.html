@@ -156,6 +156,33 @@
         background: #3f5870;
     }
 
+    .myAAAmainHeader {
+        display: block;
+        margin-bottom: 0.75rem;
+    }
+
+    .myAAAmainHeader h1 {
+        margin: 0 0 0.4rem 0;
+    }
+
+    .myAAAmainControls {
+        display: inline-flex;
+        gap: 0.5rem;
+    }
+
+    .myAAAmainControls button {
+        padding: 0.25rem 0.5rem;
+        border: 1px solid #7f8c8d;
+        background: #ecf0f1;
+        color: #2c3e50;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .myAAAmainControls button:hover {
+        background: #dde4e8;
+    }
+
     script {
         display: none;
     }
@@ -254,6 +281,25 @@
         const collapseAllBtn = navElement.querySelector('#myAAACollapseAll');
         expandAllBtn.addEventListener('click', () => setNavDetailsState(true));
         collapseAllBtn.addEventListener('click', () => setNavDetailsState(false));
+
+        // Expand or collapse all details in main pane
+        function setMainDetailsState(open) {
+            document.querySelectorAll('.myAAAcontainer main details').forEach(d => {
+                if (open) {
+                    d.setAttribute('open', '');
+                } else {
+                    d.removeAttribute('open');
+                }
+            });
+            highlightActiveLink();
+        }
+
+        const mainExpandAllBtn = document.querySelector('#myAAAMainExpandAll');
+        const mainCollapseAllBtn = document.querySelector('#myAAAMainCollapseAll');
+        if (mainExpandAllBtn && mainCollapseAllBtn) {
+            mainExpandAllBtn.addEventListener('click', () => setMainDetailsState(true));
+            mainCollapseAllBtn.addEventListener('click', () => setMainDetailsState(false));
+        }
 
         // Function to open a details element and all its parent details
         function openDetailsAndParents(element) {
@@ -376,7 +422,13 @@
     </nav>
 
     <main>
-        <h1>Binary Data Format Description</h1>
+        <div class="myAAAmainHeader">
+            <h1>Binary Data Format Description</h1>
+            <div class="myAAAmainControls">
+                <button type="button" id="myAAAMainExpandAll">Expand all</button>
+                <button type="button" id="myAAAMainCollapseAll">Collapse all</button>
+            </div>
+        </div>
         <details open>
             <summary><span>File Header</span></summary>
             <p>The file header contains metadata about the binary format structure and version.</p>
