@@ -126,6 +126,25 @@
         margin-left: 1.5rem;
     }
 
+    .myAAAnavControls {
+        display: flex;
+        gap: 0.5rem;
+        margin: 0.5rem 0 0.75rem 0;
+    }
+
+    .myAAAnavControls button {
+        padding: 0.25rem 0.5rem;
+        border: 1px solid #7f8c8d;
+        background: #34495e;
+        color: #ecf0f1;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .myAAAnavControls button:hover {
+        background: #3f5870;
+    }
+
     script {
         display: none;
     }
@@ -203,14 +222,27 @@
         navContainer.id = 'myAAAnavContainer';
         buildNav(mainElement, navContainer);
 
-        // Insert the generated nav before the main details
+        // Insert the generated nav after the existing controls
         const navElement = document.querySelector('.myAAAcontainer nav');
-        const mainFirstChild = navElement.querySelector('h2').nextSibling;
-        if (mainFirstChild) {
-            mainFirstChild.parentNode.insertBefore(navContainer, mainFirstChild);
-        } else {
-            navElement.appendChild(navContainer);
+
+        navElement.appendChild(navContainer);
+
+        // Expand or collapse all details in nav
+        function setNavDetailsState(open) {
+            document.querySelectorAll('.myAAAcontainer nav details').forEach(d => {
+                if (open) {
+                    d.setAttribute('open', '');
+                } else {
+                    d.removeAttribute('open');
+                }
+            });
+            highlightActiveLink();
         }
+
+        const expandAllBtn = navElement.querySelector('#myAAAExpandAll');
+        const collapseAllBtn = navElement.querySelector('#myAAACollapseAll');
+        expandAllBtn.addEventListener('click', () => setNavDetailsState(true));
+        collapseAllBtn.addEventListener('click', () => setNavDetailsState(false));
 
         // Function to open a details element and all its parent details
         function openDetailsAndParents(element) {
@@ -261,7 +293,7 @@
                 const rect = detail.getBoundingClientRect();
                 const offset = rect.top + window.scrollY;
 
-                if (offset <= scrollTop + 200) {
+                if (offset <= scrollTop + 1) {
                     if (!bestAbove || offset > bestAbove.offset) {
                         bestAbove = { detail, offset };
                     }
@@ -271,29 +303,30 @@
             return bestAbove ? bestAbove.detail : null;
         }
 
-        // Returns false if any ancestor details is collapsed;
-        // used to avoid highlighting hidden nav items
-        function isNavLinkVisible(link) {
-            let current = link.parentElement;
-            while (current && current !== document.body) {
-                if (current.tagName === 'DETAILS' && !current.open) {
-                    return false;
-                }
-                current = current.parentElement;
+
+        // Returns the first visible nav link by climbing the nav tree (not the content tree)
+        function findVisibleNavLink(detail) {
+            let currentLink = document.querySelector(`.myAAAcontainer nav a[href="#${detail.id}"]`);
+            while (currentLink) {
+                if (isDetailVisible(currentLink)) return currentLink;
+
+                const currentDetails = currentLink.closest('details');
+                if (!currentDetails) break;
+
+                const parentDetails = currentDetails.parentElement ? currentDetails.parentElement.closest('details') : null;
+                currentLink = parentDetails ? parentDetails.querySelector(':scope > summary a') : null;
             }
-            return true;
+            return null;
         }
 
         function highlightActiveLink() {
-            const activeDetail = findActiveSection();
             const navLinks = document.querySelectorAll('.myAAAcontainer nav a');
             navLinks.forEach(link => link.classList.remove('active'));
 
+            const activeDetail = findActiveSection();
             if (activeDetail && activeDetail.id) {
-                const activeLink = document.querySelector(`.myAAAcontainer nav a[href="#${activeDetail.id}"]`);
-                if (activeLink && isNavLinkVisible(activeLink)) {
-                    activeLink.classList.add('active');
-                }
+                const activeLink = findVisibleNavLink(activeDetail);
+                if (activeLink) activeLink.classList.add('active');
             }
         }
 
@@ -318,15 +351,15 @@
         handleHashChange();
         highlightActiveLink();
 
-        // Call once on load to highlight the initial section
-        setTimeout(() => {
-            highlightActiveLink();
-        }, 100);
     });
 </script>
 <div class="myAAAcontainer">
     <nav aria-label="Navigation">
         <h2>Sections</h2>
+        <div class="myAAAnavControls">
+            <button type="button" id="myAAAExpandAll">Expand all</button>
+            <button type="button" id="myAAACollapseAll">Collapse all</button>
+        </div>
     </nav>
 
     <main>
