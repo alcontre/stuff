@@ -90,6 +90,16 @@
         list-style: none;
     }
 
+    .myAAAcontainer nav span[data-target] {
+        cursor: pointer;
+        color: #3498db;
+    }
+
+    .myAAAcontainer nav span[data-target]:hover {
+        color: #5dade2;
+        text-decoration: underline;
+    }
+
     .myAAAcontainer nav details summary::before {
         content: '▶ ';
         display: inline-block;
@@ -156,11 +166,11 @@
                     // Parent node - create details element
                     const detailsNav = document.createElement('details');
                     const summaryNav = document.createElement('summary');
-                    const link = document.createElement('a');
+                    const span = document.createElement('span');
 
-                    link.href = '#' + id;
-                    link.textContent = text;
-                    summaryNav.appendChild(link);
+                    span.dataset.target = id;
+                    span.textContent = text;
+                    summaryNav.appendChild(span);
                     detailsNav.appendChild(summaryNav);
                     detailsNav.setAttribute('open', '');
 
@@ -168,12 +178,12 @@
                     buildNav(detail, detailsNav);
                     targetContainer.appendChild(detailsNav);
                 } else {
-                    // Leaf node - just create a link in a div
+                    // Leaf node - just create a span in a div
                     const leafDiv = document.createElement('div');
-                    const link = document.createElement('a');
-                    link.href = '#' + id;
-                    link.textContent = text;
-                    leafDiv.appendChild(link);
+                    const span = document.createElement('span');
+                    span.dataset.target = id;
+                    span.textContent = text;
+                    leafDiv.appendChild(span);
                     targetContainer.appendChild(leafDiv);
                 }
             });
@@ -226,18 +236,15 @@
         // Handle initial hash on page load
         handleHashChange();
 
-        // Also handle clicks on nav links directly
+        // Handle clicks on nav entries
         navContainer.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                e.preventDefault(); // Prevent default jump behavior
-                const href = e.target.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    const target = document.querySelector(href);
-                    if (target) {
-                        openDetailsAndParents(target);
-                        // Update the URL hash without triggering jump
-                        history.pushState(null, null, href);
-                    }
+            const target = e.target.closest('[data-target]');
+            if (target) {
+                const targetId = target.dataset.target;
+                const element = document.getElementById(targetId);
+                if (element) {
+                    openDetailsAndParents(element);
+                    history.pushState(null, null, '#' + targetId);
                 }
             }
         });
