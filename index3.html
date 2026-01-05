@@ -113,6 +113,32 @@
 </style>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const mainElement = document.querySelector('.myAAAcontainer main');
+
+        // Number all sections recursively
+        function numberSections(parent, prefix = '') {
+            const childDetails = Array.from(parent.children).filter(child => child.tagName === 'DETAILS');
+
+            childDetails.forEach((detail, index) => {
+                const sectionNum = prefix ? `${prefix}-${index + 1}` : String(index + 1);
+                const titleSpan = detail.querySelector(':scope > summary span');
+                const titleText = titleSpan ? titleSpan.textContent.trim() : '';
+
+                // Update ID
+                detail.id = `myAAA${sectionNum}`;
+
+                // Update span with section number
+                if (titleSpan) {
+                    titleSpan.textContent = `${sectionNum.replace(/-/g, '.')} ${titleText}`;
+                }
+
+                // Recursively number child sections
+                numberSections(detail, sectionNum);
+            });
+        }
+
+        // Number all sections first
+        numberSections(mainElement);
 
         // Find all details elements in main and build nav
         function buildNav(parent, targetContainer) {
@@ -153,7 +179,7 @@
             });
         }
 
-        const mainElement = document.querySelector('.myAAAcontainer main');
+        // Build navigation from numbered sections
         const navContainer = document.createElement('div');
         navContainer.id = 'myAAAnavContainer';
         buildNav(mainElement, navContainer);
@@ -175,66 +201,66 @@
 
     <main>
         <h1>Binary Data Format Description</h1>
-        <details id="myAAA1" open>
-            <summary><span>1 File Header</span></summary>
+        <details open>
+            <summary><span>File Header</span></summary>
             <p>The file header contains metadata about the binary format structure and version.</p>
 
-            <details id="myAAA1-1">
-                <summary><span>1.1 Signature</span></summary>
+            <details>
+                <summary><span>Signature</span></summary>
                 <p>Magic bytes indicating format identity.</p>
             </details>
 
-            <details id="myAAA1-2">
-                <summary><span>1.2 Version</span></summary>
+            <details>
+                <summary><span>Version</span></summary>
                 <p>16-bit integer identifying schema revision.</p>
             </details>
         </details>
 
-        <details id="myAAA2" open>
-            <summary><span>2 Chunk Table</span></summary>
+        <details open>
+            <summary><span>Chunk Table</span></summary>
             <p>The chunk table provides an index of all data chunks within the file.</p>
 
-            <details id="myAAA2-1">
-                <summary><span>2.1 Chunk Entry</span></summary>
+            <details>
+                <summary><span>Chunk Entry</span></summary>
                 <p>Repeated entries describing each payload chunk.</p>
 
-                <details id="myAAA2-1-1">
-                    <summary><span>2.1.1 Chunk Type</span></summary>
+                <details>
+                    <summary><span>Chunk Type</span></summary>
                     <p>Enumerated value describing purpose.</p>
                 </details>
 
-                <details id="myAAA2-1-2">
-                    <summary><span>2.1.2 Chunk Offset</span></summary>
+                <details>
+                    <summary><span>Chunk Offset</span></summary>
                     <p>32-bit offset from file start.</p>
                 </details>
 
-                <details id="myAAA2-1-3">
-                    <summary><span>2.1.3 Chunk Size</span></summary>
+                <details>
+                    <summary><span>Chunk Size</span></summary>
                     <p>32-bit length in bytes.</p>
                 </details>
             </details>
         </details>
 
-        <details id="myAAA3" open>
-            <summary><span>3 Payload</span></summary>
+        <details open>
+            <summary><span>Payload</span></summary>
             <p>The payload section contains the actual data content organized into structured blocks.</p>
 
-            <details id="myAAA3-1">
-                <summary><span>3.1 Metadata Block</span></summary>
+            <details>
+                <summary><span>Metadata Block</span></summary>
                 <p>Optional key/value pairs with UTF-8 strings.</p>
             </details>
 
-            <details id="myAAA3-2">
-                <summary><span>3.2 Data Block</span></summary>
+            <details>
+                <summary><span>Data Block</span></summary>
                 <p>One or more records of the primary content.</p>
 
-                <details id="myAAA3-2-1">
-                    <summary><span>3.2.1 Record Header</span></summary>
+                <details>
+                    <summary><span>Record Header</span></summary>
                     <p>Flags and length for each record.</p>
                 </details>
 
-                <details id="myAAA3-2-2">
-                    <summary><span>3.2.2 Record Body</span></summary>
+                <details>
+                    <summary><span>Record Body</span></summary>
                     <p>Raw bytes interpreted per chunk type.</p>
                 </details>
             </details>
