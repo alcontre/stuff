@@ -208,13 +208,10 @@
         function handleHashChange() {
             const hash = window.location.hash;
             if (hash) {
-                // Use setTimeout to ensure hash navigation completes
-                setTimeout(() => {
-                    const target = document.querySelector(hash);
-                    if (target) {
-                        openDetailsAndParents(target);
-                    }
-                }, 10);
+                const target = document.querySelector(hash);
+                if (target) {
+                    openDetailsAndParents(target);
+                }
             }
         }
 
