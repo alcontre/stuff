@@ -68,11 +68,11 @@
         font-family: monospace;
     }
 
-    .myAAAcontainer main details[open] > summary::before {
+    .myAAAcontainer main details[open]>summary::before {
         content: '▼ ';
     }
 
-    .myAAAcontainer main details > *:not(summary) {
+    .myAAAcontainer main details>*:not(summary) {
         margin-left: 1.5rem;
     }
 
@@ -95,12 +95,12 @@
         font-family: monospace;
     }
 
-    .myAAAcontainer nav details[open] > summary::before {
+    .myAAAcontainer nav details[open]>summary::before {
         content: '▼ ';
     }
 
     /* Indentation for nested elements ("details") */
-    .myAAAcontainer nav details > *:not(summary) {
+    .myAAAcontainer nav details>*:not(summary) {
         margin-left: 1.5rem;
     }
 
@@ -109,54 +109,54 @@
     }
 </style>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const mainElement = document.querySelector('.myAAAcontainer main');
-    const navElement = document.querySelector('.myAAAcontainer nav');
-    const navContainer = document.createElement('div');
-    navContainer.id = 'myAAAnavContainer';
-    
-    // Find all details elements in main and build nav
-    function buildNav(parent, targetContainer) {
-        const childDetails = Array.from(parent.children).filter(child => child.tagName === 'DETAILS');
-        
-        childDetails.forEach(detail => {
-            const summary = detail.querySelector(':scope > summary');
-            const titleSpan = summary.querySelector('.myAAAsectionTitle');
-            const id = detail.id;
-            const text = titleSpan ? titleSpan.textContent : '';
-            
-            const detailsNav = document.createElement('details');
-            const summaryNav = document.createElement('summary');
-            const link = document.createElement('a');
-            
-            link.href = '#' + id;
-            link.textContent = text;
-            summaryNav.appendChild(link);
-            detailsNav.appendChild(summaryNav);
-            
-            // Check if original detail has child details
-            const nestedDetails = Array.from(detail.children).filter(child => child.tagName === 'DETAILS');
-            if (nestedDetails.length > 0) {
-                // Mark parent as open if any children exist
-                detailsNav.setAttribute('open', '');
-                // Recursively build nav for nested details
-                buildNav(detail, detailsNav);
-            }
-            
-            targetContainer.appendChild(detailsNav);
-        });
-    }
-    
-    buildNav(mainElement, navContainer);
-    
-    // Insert the generated nav before the main details
-    const mainFirstChild = navElement.querySelector('h2').nextSibling;
-    if (mainFirstChild) {
-        mainFirstChild.parentNode.insertBefore(navContainer, mainFirstChild);
-    } else {
-        navElement.appendChild(navContainer);
-    }
-});
+    document.addEventListener('DOMContentLoaded', function () {
+        const mainElement = document.querySelector('.myAAAcontainer main');
+        const navContainer = document.createElement('div');
+        navContainer.id = 'myAAAnavContainer';
+
+        // Find all details elements in main and build nav
+        function buildNav(parent, targetContainer) {
+            const childDetails = Array.from(parent.children).filter(child => child.tagName === 'DETAILS');
+
+            childDetails.forEach(detail => {
+                const summary = detail.querySelector(':scope > summary');
+                const titleSpan = summary.querySelector('.myAAAsectionTitle');
+                const id = detail.id;
+                const text = titleSpan ? titleSpan.textContent : '';
+
+                const detailsNav = document.createElement('details');
+                const summaryNav = document.createElement('summary');
+                const link = document.createElement('a');
+
+                link.href = '#' + id;
+                link.textContent = text;
+                summaryNav.appendChild(link);
+                detailsNav.appendChild(summaryNav);
+
+                // Check if original detail has child details
+                const nestedDetails = Array.from(detail.children).filter(child => child.tagName === 'DETAILS');
+                if (nestedDetails.length > 0) {
+                    // Mark parent as open if any children exist
+                    detailsNav.setAttribute('open', '');
+                    // Recursively build nav for nested details
+                    buildNav(detail, detailsNav);
+                }
+
+                targetContainer.appendChild(detailsNav);
+            });
+        }
+
+        buildNav(mainElement, navContainer);
+
+        // Insert the generated nav before the main details
+        const navElement = document.querySelector('.myAAAcontainer nav');
+        const mainFirstChild = navElement.querySelector('h2').nextSibling;
+        if (mainFirstChild) {
+            mainFirstChild.parentNode.insertBefore(navContainer, mainFirstChild);
+        } else {
+            navElement.appendChild(navContainer);
+        }
+    });
 </script>
 <div class="myAAAcontainer">
     <nav aria-label="Navigation">
