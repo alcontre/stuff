@@ -40,7 +40,7 @@
         margin-top: 0;
     }
 
-    .myAAAsectionTitle {
+    .myAAAcontainer main details summary span {
         display: inline;
         margin: 0;
         padding: 0;
@@ -116,7 +116,7 @@
             const childDetails = Array.from(parent.children).filter(child => child.tagName === 'DETAILS');
 
             childDetails.forEach(detail => {
-                const titleSpan = detail.querySelector(':scope > summary .myAAAsectionTitle');
+                const titleSpan = detail.querySelector(':scope > summary span');
                 const id = detail.id;
                 const text = titleSpan ? titleSpan.textContent : '';
 
@@ -165,65 +165,65 @@
     <main>
         <h1>Binary Data Format Description</h1>
         <details id="myAAA1" open>
-            <summary><span class="myAAAsectionTitle">1 File Header</span></summary>
+            <summary><span>1 File Header</span></summary>
             <p>The file header contains metadata about the binary format structure and version.</p>
 
             <details id="myAAA1-1">
-                <summary><span class="myAAAsectionTitle">1.1 Signature</span></summary>
+                <summary><span>1.1 Signature</span></summary>
                 <p>Magic bytes indicating format identity.</p>
             </details>
 
             <details id="myAAA1-2">
-                <summary><span class="myAAAsectionTitle">1.2 Version</span></summary>
+                <summary><span>1.2 Version</span></summary>
                 <p>16-bit integer identifying schema revision.</p>
             </details>
         </details>
 
         <details id="myAAA2" open>
-            <summary><span class="myAAAsectionTitle">2 Chunk Table</span></summary>
+            <summary><span>2 Chunk Table</span></summary>
             <p>The chunk table provides an index of all data chunks within the file.</p>
 
             <details id="myAAA2-1">
-                <summary><span class="myAAAsectionTitle">2.1 Chunk Entry</span></summary>
+                <summary><span>2.1 Chunk Entry</span></summary>
                 <p>Repeated entries describing each payload chunk.</p>
 
                 <details id="myAAA2-1-1">
-                    <summary><span class="myAAAsectionTitle">2.1.1 Chunk Type</span></summary>
+                    <summary><span>2.1.1 Chunk Type</span></summary>
                     <p>Enumerated value describing purpose.</p>
                 </details>
 
                 <details id="myAAA2-1-2">
-                    <summary><span class="myAAAsectionTitle">2.1.2 Chunk Offset</span></summary>
+                    <summary><span>2.1.2 Chunk Offset</span></summary>
                     <p>32-bit offset from file start.</p>
                 </details>
 
                 <details id="myAAA2-1-3">
-                    <summary><span class="myAAAsectionTitle">2.1.3 Chunk Size</span></summary>
+                    <summary><span>2.1.3 Chunk Size</span></summary>
                     <p>32-bit length in bytes.</p>
                 </details>
             </details>
         </details>
 
         <details id="myAAA3" open>
-            <summary><span class="myAAAsectionTitle">3 Payload</span></summary>
+            <summary><span>3 Payload</span></summary>
             <p>The payload section contains the actual data content organized into structured blocks.</p>
 
             <details id="myAAA3-1">
-                <summary><span class="myAAAsectionTitle">3.1 Metadata Block</span></summary>
+                <summary><span>3.1 Metadata Block</span></summary>
                 <p>Optional key/value pairs with UTF-8 strings.</p>
             </details>
 
             <details id="myAAA3-2">
-                <summary><span class="myAAAsectionTitle">3.2 Data Block</span></summary>
+                <summary><span>3.2 Data Block</span></summary>
                 <p>One or more records of the primary content.</p>
 
                 <details id="myAAA3-2-1">
-                    <summary><span class="myAAAsectionTitle">3.2.1 Record Header</span></summary>
+                    <summary><span>3.2.1 Record Header</span></summary>
                     <p>Flags and length for each record.</p>
                 </details>
 
                 <details id="myAAA3-2-2">
-                    <summary><span class="myAAAsectionTitle">3.2.2 Record Body</span></summary>
+                    <summary><span>3.2.2 Record Body</span></summary>
                     <p>Raw bytes interpreted per chunk type.</p>
                 </details>
             </details>
