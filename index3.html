@@ -120,25 +120,33 @@
                 const id = detail.id;
                 const text = titleSpan ? titleSpan.textContent : '';
 
-                const detailsNav = document.createElement('details');
-                const summaryNav = document.createElement('summary');
-                const link = document.createElement('a');
-
-                link.href = '#' + id;
-                link.textContent = text;
-                summaryNav.appendChild(link);
-                detailsNav.appendChild(summaryNav);
-
                 // Check if original detail has child details
                 const nestedDetails = Array.from(detail.children).filter(child => child.tagName === 'DETAILS');
+                
                 if (nestedDetails.length > 0) {
-                    // Mark parent as open if any children exist
+                    // Parent node - create details element
+                    const detailsNav = document.createElement('details');
+                    const summaryNav = document.createElement('summary');
+                    const link = document.createElement('a');
+
+                    link.href = '#' + id;
+                    link.textContent = text;
+                    summaryNav.appendChild(link);
+                    detailsNav.appendChild(summaryNav);
                     detailsNav.setAttribute('open', '');
+                    
                     // Recursively build nav for nested details
                     buildNav(detail, detailsNav);
+                    targetContainer.appendChild(detailsNav);
+                } else {
+                    // Leaf node - just create a link in a div
+                    const leafDiv = document.createElement('div');
+                    const link = document.createElement('a');
+                    link.href = '#' + id;
+                    link.textContent = text;
+                    leafDiv.appendChild(link);
+                    targetContainer.appendChild(leafDiv);
                 }
-
-                targetContainer.appendChild(detailsNav);
             });
         }
 
