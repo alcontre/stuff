@@ -269,7 +269,7 @@
             // Query navLinks fresh each time since they're built dynamically
             const navLinks = document.querySelectorAll('.myAAAcontainer nav a');
             navLinks.forEach(link => link.classList.remove('active'));
-            
+
             if (activeDetail && activeDetail.id) {
                 const activeLink = document.querySelector(`.myAAAcontainer nav a[href="#${activeDetail.id}"]`);
                 if (activeLink) {
@@ -291,7 +291,7 @@
 
         // Listen to window scroll since the main element scrolls with the page
         window.addEventListener('scroll', onScroll);
-        
+
         // Call once on load to highlight the initial section
         setTimeout(() => {
             highlightActiveLink();
@@ -309,12 +309,12 @@
             <summary><span>File Header</span></summary>
             <p>The file header contains metadata about the binary format structure and version.</p>
 
-            <details>
+            <details open>
                 <summary><span>Signature</span></summary>
                 <p>Magic bytes indicating format identity.</p>
             </details>
 
-            <details>
+            <details open>
                 <summary><span>Version</span></summary>
                 <p>16-bit integer identifying schema revision.</p>
             </details>
@@ -324,21 +324,21 @@
             <summary><span>Chunk Table</span></summary>
             <p>The chunk table provides an index of all data chunks within the file.</p>
 
-            <details>
+            <details open>
                 <summary><span>Chunk Entry</span></summary>
                 <p>Repeated entries describing each payload chunk.</p>
 
-                <details>
+                <details open>
                     <summary><span>Chunk Type</span></summary>
                     <p>Enumerated value describing purpose.</p>
                 </details>
 
-                <details>
+                <details open>
                     <summary><span>Chunk Offset</span></summary>
                     <p>32-bit offset from file start.</p>
                 </details>
 
-                <details>
+                <details open>
                     <summary><span>Chunk Size</span></summary>
                     <p>32-bit length in bytes.</p>
                 </details>
@@ -349,21 +349,21 @@
             <summary><span>Payload</span></summary>
             <p>The payload section contains the actual data content organized into structured blocks.</p>
 
-            <details>
+            <details open>
                 <summary><span>Metadata Block</span></summary>
                 <p>Optional key/value pairs with UTF-8 strings.</p>
             </details>
 
-            <details>
+            <details open>
                 <summary><span>Data Block</span></summary>
                 <p>One or more records of the primary content.</p>
 
-                <details>
+                <details open>
                     <summary><span>Record Header</span></summary>
                     <p>Flags and length for each record.</p>
                 </details>
 
-                <details>
+                <details open>
                     <summary><span>Record Body</span></summary>
                     <p>Raw bytes interpreted per chunk type.</p>
                 </details>
