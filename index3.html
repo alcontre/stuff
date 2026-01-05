@@ -230,19 +230,26 @@
                 const target = document.querySelector(hash);
                 if (target) {
                     openDetailsAndParents(target);
+                    highlightActiveLink();
                 }
             }
         }
 
-        // Listen for hash changes
-        window.addEventListener('hashchange', handleHashChange);
-
-        // Handle initial hash on page load
-        handleHashChange();
-
         // Scroll tracking to highlight active section in nav
         const mainContent = document.querySelector('.myAAAcontainer main');
         const mainDetails = Array.from(document.querySelectorAll('.myAAAcontainer main details'));
+
+        function isDetailVisible(detail) {
+            if (!detail) return false;
+            let current = detail.parentElement;
+            while (current && current !== document.body) {
+                if (current.tagName === 'DETAILS' && !current.open) {
+                    return false; // Hidden by a collapsed ancestor
+                }
+                current = current.parentElement;
+            }
+            return true;
+        }
 
         function findActiveSection() {
             const scrollTop = window.scrollY;
@@ -250,8 +257,8 @@
 
             mainDetails.forEach(detail => {
                 if (!detail.id) return;
+                if (!isDetailVisible(detail)) return;
                 const rect = detail.getBoundingClientRect();
-                // Get the absolute position of the element on the page
                 const offset = rect.top + window.scrollY;
 
                 if (offset <= scrollTop + 200) {
@@ -264,15 +271,27 @@
             return bestAbove ? bestAbove.detail : null;
         }
 
+        // Returns false if any ancestor details is collapsed;
+        // used to avoid highlighting hidden nav items
+        function isNavLinkVisible(link) {
+            let current = link.parentElement;
+            while (current && current !== document.body) {
+                if (current.tagName === 'DETAILS' && !current.open) {
+                    return false;
+                }
+                current = current.parentElement;
+            }
+            return true;
+        }
+
         function highlightActiveLink() {
             const activeDetail = findActiveSection();
-            // Query navLinks fresh each time since they're built dynamically
             const navLinks = document.querySelectorAll('.myAAAcontainer nav a');
             navLinks.forEach(link => link.classList.remove('active'));
 
             if (activeDetail && activeDetail.id) {
                 const activeLink = document.querySelector(`.myAAAcontainer nav a[href="#${activeDetail.id}"]`);
-                if (activeLink) {
+                if (activeLink && isNavLinkVisible(activeLink)) {
                     activeLink.classList.add('active');
                 }
             }
@@ -291,6 +310,13 @@
 
         // Listen to window scroll since the main element scrolls with the page
         window.addEventListener('scroll', onScroll);
+
+        // Listen for hash changes after scroll/highlight utilities are ready
+        window.addEventListener('hashchange', handleHashChange);
+
+        // Handle initial hash on page load
+        handleHashChange();
+        highlightActiveLink();
 
         // Call once on load to highlight the initial section
         setTimeout(() => {
