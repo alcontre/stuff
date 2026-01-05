@@ -58,6 +58,8 @@
         list-style: none;
     }
 
+    /* We use ::before rather than ::marker because confluence HTML Include
+    appears to strip out ::marker*/
     .myAAAcontainer main details summary::before {
         content: '▶ ';
         display: inline-block;
