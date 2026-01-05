@@ -90,6 +90,14 @@
         list-style: none;
     }
 
+    .myAAAcontainer nav a.active {
+        color: #e74c3c;
+        font-weight: bold;
+        background-color: rgba(231, 76, 60, 0.1);
+        padding: 0.25em 0.5em;
+        border-radius: 3px;
+    }
+
     .myAAAcontainer nav details summary::before {
         content: '▶ ';
         display: inline-block;
@@ -220,6 +228,63 @@
 
         // Handle initial hash on page load
         handleHashChange();
+
+        // Scroll tracking to highlight active section in nav
+        const mainContent = document.querySelector('.myAAAcontainer main');
+        const mainDetails = Array.from(document.querySelectorAll('.myAAAcontainer main details'));
+
+        function findActiveSection() {
+            const scrollTop = window.scrollY;
+            let bestAbove = null;
+
+            mainDetails.forEach(detail => {
+                if (!detail.id) return;
+                const rect = detail.getBoundingClientRect();
+                // Get the absolute position of the element on the page
+                const offset = rect.top + window.scrollY;
+
+                if (offset <= scrollTop + 200) {
+                    if (!bestAbove || offset > bestAbove.offset) {
+                        bestAbove = { detail, offset };
+                    }
+                }
+            });
+
+            return bestAbove ? bestAbove.detail : null;
+        }
+
+        function highlightActiveLink() {
+            const activeDetail = findActiveSection();
+            // Query navLinks fresh each time since they're built dynamically
+            const navLinks = document.querySelectorAll('.myAAAcontainer nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            if (activeDetail && activeDetail.id) {
+                const activeLink = document.querySelector(`.myAAAcontainer nav a[href="#${activeDetail.id}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
+        }
+
+        // Throttle scroll events using requestAnimationFrame
+        let ticking = false;
+        function onScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    highlightActiveLink();
+                    ticking = false;
+                });
+            }
+        }
+
+        // Listen to window scroll since the main element scrolls with the page
+        window.addEventListener('scroll', onScroll);
+        
+        // Call once on load to highlight the initial section
+        setTimeout(() => {
+            highlightActiveLink();
+        }, 100);
     });
 </script>
 <div class="myAAAcontainer">
