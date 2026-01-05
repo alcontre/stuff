@@ -192,6 +192,55 @@
         } else {
             navElement.appendChild(navContainer);
         }
+
+        // Function to open a details element and all its parent details
+        function openDetailsAndParents(element) {
+            let current = element;
+            while (current && current !== document.body) {
+                if (current.tagName === 'DETAILS') {
+                    current.setAttribute('open', '');
+                }
+                current = current.parentElement;
+            }
+            // Scroll to element after opening
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Handle hash navigation to expand collapsed details
+        function handleHashChange() {
+            const hash = window.location.hash;
+            if (hash) {
+                // Use setTimeout to ensure hash navigation completes
+                setTimeout(() => {
+                    const target = document.querySelector(hash);
+                    if (target) {
+                        openDetailsAndParents(target);
+                    }
+                }, 10);
+            }
+        }
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', handleHashChange);
+        
+        // Handle initial hash on page load
+        handleHashChange();
+
+        // Also handle clicks on nav links directly
+        navContainer.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                e.preventDefault(); // Prevent default jump behavior
+                const href = e.target.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        openDetailsAndParents(target);
+                        // Update the URL hash without triggering jump
+                        history.pushState(null, null, href);
+                    }
+                }
+            }
+        });
     });
 </script>
 <div class="myAAAcontainer">
