@@ -7,15 +7,54 @@
     }
 
     .myAAAcontainer {
-        display: flex;
+        display: grid;
+        grid-template-columns: 260px 1fr;
         align-items: flex-start;
         min-height: 100vh;
         width: 100%;
         overflow: visible;
     }
 
+    #myAAANavToggle {
+        position: absolute;
+        left: -9999px;
+    }
+
+    .myAAANavToggleLabel {
+        position: fixed;
+        top: 0.75rem;
+        left: 0.75rem;
+        z-index: 20;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        background: #34495e;
+        color: #ecf0f1;
+        border: 1px solid #7f8c8d;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        font-size: 0.95rem;
+    }
+
+    .myAAANavToggleLabel:hover {
+        background: #3f5870;
+    }
+
+    .myAAANavToggleLabel .myAAAShowLabel {
+        display: none;
+    }
+
+    #myAAANavToggle:checked+.myAAANavToggleLabel .myAAAHideLabel {
+        display: none;
+    }
+
+    #myAAANavToggle:checked+.myAAANavToggleLabel .myAAAShowLabel {
+        display: inline;
+    }
+
     .myAAAcontainer nav {
-        width: 260px;
         position: sticky;
         top: 0;
         max-height: 100vh;
@@ -24,6 +63,7 @@
         overflow-y: auto;
         background-color: #2c3e50;
         color: #ecf0f1;
+        transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
     .myAAAcontainer nav h2 {
@@ -41,10 +81,24 @@
     }
 
     .myAAAcontainer main {
-        flex: 1;
         padding: 1.5rem;
         min-height: 100vh;
         overflow: visible;
+    }
+
+    /* Collapse nav when toggled off */
+    #myAAANavToggle:checked~.myAAAcontainer {
+        grid-template-columns: 0 1fr;
+    }
+
+    #myAAANavToggle:checked~.myAAAcontainer nav {
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    #myAAANavToggle:checked~.myAAAcontainer main {
+        padding-left: 1.5rem;
     }
 
     .myAAAcontainer main h1 {
@@ -357,6 +411,10 @@
                 }
             });
 
+            if (bestAbove) {
+                console.log('Active section:', bestAbove.detail.id);
+            }
+
             return bestAbove ? bestAbove.detail : null;
         }
 
@@ -364,8 +422,13 @@
         // Returns the first visible nav link by climbing the nav tree (not the content tree)
         function findVisibleNavLink(detail) {
             let currentLink = document.querySelector(`.myAAAcontainer nav a[href="#${detail.id}"]`);
+            console.log('Link Search');
             while (currentLink) {
-                if (isDetailVisible(currentLink)) return currentLink;
+                console.log('>> Current Link:', currentLink.href);
+                if (isDetailVisible(currentLink)) {
+                    console.log(">> Found visible link");
+                    return currentLink;
+                }
 
                 const currentDetails = currentLink.closest('details');
                 if (!currentDetails) break;
@@ -410,6 +473,11 @@
 
     });
 </script>
+<input type="checkbox" id="myAAANavToggle" aria-label="Toggle navigation" />
+<label class="myAAANavToggleLabel" for="myAAANavToggle">
+    <span class="myAAAHideLabel">Hide nav</span>
+    <span class="myAAAShowLabel">Show nav</span>
+</label>
 <div class="myAAAcontainer">
     <nav aria-label="Navigation">
         <div class="myAAAnavHeader">
