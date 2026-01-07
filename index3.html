@@ -19,9 +19,22 @@
         overflow: visible;
     }
 
+    /* Visually hide the checkbox without moving it off-screen.
+       If it's positioned far away, focusing it can scroll the page to the top. */
     #myAAANavToggle {
-        position: absolute;
-        left: -9999px;
+        position: sticky;
+        top: 0.75rem;
+        width: 1px;
+        height: 1px;
+        margin: 0.75rem 0 0 0.75rem;
+        padding: 0;
+        border: 0;
+        opacity: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+        z-index: 19;
     }
 
     .myAAANavToggleLabel {
