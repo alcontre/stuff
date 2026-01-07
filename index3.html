@@ -6,6 +6,10 @@
         height: 100%;
     }
 
+    .myAAAouter {
+        position: relative;
+    }
+
     .myAAAcontainer {
         display: grid;
         grid-template-columns: 260px 1fr;
@@ -21,9 +25,9 @@
     }
 
     .myAAANavToggleLabel {
-        position: fixed;
+        position: sticky;
         top: 0.75rem;
-        left: 0.75rem;
+        margin: 0.75rem 0 0 0.75rem;
         z-index: 20;
         display: inline-flex;
         align-items: center;
@@ -36,6 +40,7 @@
         cursor: pointer;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         font-size: 0.95rem;
+        width: max-content;
     }
 
     .myAAANavToggleLabel:hover {
@@ -473,12 +478,13 @@
 
     });
 </script>
-<input type="checkbox" id="myAAANavToggle" aria-label="Toggle navigation" />
-<label class="myAAANavToggleLabel" for="myAAANavToggle">
-    <span class="myAAAHideLabel">Hide nav</span>
-    <span class="myAAAShowLabel">Show nav</span>
-</label>
-<div class="myAAAcontainer">
+<div class="myAAAouter">
+    <input type="checkbox" id="myAAANavToggle" aria-label="Toggle navigation" />
+    <label class="myAAANavToggleLabel" for="myAAANavToggle">
+        <span class="myAAAHideLabel">Hide nav</span>
+        <span class="myAAAShowLabel">Show nav</span>
+    </label>
+    <div class="myAAAcontainer">
     <nav aria-label="Navigation">
         <div class="myAAAnavHeader">
             <h2>Navigation</h2>
@@ -579,4 +585,5 @@
             </details>
         </details>
     </main>
+    </div>
 </div>
