@@ -391,13 +391,13 @@
                 const target = document.querySelector(hash);
                 if (target) {
                     openDetailsAndParents(target);
+                    setActiveDetail(target);
                     highlightActiveLink();
                 }
             }
         }
 
         // Scroll tracking to highlight active section in nav
-        const mainContent = document.querySelector('.myAAAcontainer main');
         const mainDetails = Array.from(document.querySelectorAll('.myAAAcontainer main details'));
 
         function isDetailVisible(detail) {
@@ -412,39 +412,11 @@
             return true;
         }
 
-        function findActiveSection() {
-            const scrollTop = window.scrollY;
-            let bestAbove = null;
-
-            mainDetails.forEach(detail => {
-                if (!detail.id) return;
-                if (!isDetailVisible(detail)) return;
-                const rect = detail.getBoundingClientRect();
-                const offset = rect.top + window.scrollY;
-
-                if (offset <= scrollTop + 1) {
-                    if (!bestAbove || offset > bestAbove.offset) {
-                        bestAbove = { detail, offset };
-                    }
-                }
-            });
-
-            if (bestAbove) {
-                console.log('Active section:', bestAbove.detail.id);
-            }
-
-            return bestAbove ? bestAbove.detail : null;
-        }
-
-
         // Returns the first visible nav link by climbing the nav tree (not the content tree)
         function findVisibleNavLink(detail) {
             let currentLink = document.querySelector(`.myAAAcontainer nav a[href="#${detail.id}"]`);
-            console.log('Link Search');
             while (currentLink) {
-                console.log('>> Current Link:', currentLink.href);
                 if (isDetailVisible(currentLink)) {
-                    console.log(">> Found visible link");
                     return currentLink;
                 }
 
@@ -457,37 +429,74 @@
             return null;
         }
 
+        let activeDetail = null;
+        function setActiveDetail(detail) {
+            if (!detail || !detail.id) return;
+            if (activeDetail && activeDetail.id === detail.id) return;
+            activeDetail = detail;
+        }
+
+        // Use IntersectionObserver so we don't scan every <details> on every scroll.
+        // We observe the <summary> nodes (the "headers") and maintain a small candidate set.
+        const activeCandidates = new Map(); // id -> { detail, top }
+        const mainSummaries = Array.from(document.querySelectorAll('.myAAAcontainer main details > summary'));
+
+        function updateActiveFromCandidates() {
+            let best = null;
+            for (const candidate of activeCandidates.values()) {
+                if (!best || candidate.top > best.top) {
+                    best = candidate;
+                }
+            }
+            if (best) {
+                setActiveDetail(best.detail);
+            }
+            highlightActiveLink();
+        }
+
+        const summaryObserver = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    const summaryEl = entry.target;
+                    const detail = summaryEl.parentElement;
+                    if (!detail || !detail.id) continue;
+
+                    if (entry.isIntersecting && isDetailVisible(detail)) {
+                        activeCandidates.set(detail.id, { detail, top: entry.boundingClientRect.top });
+                    } else {
+                        activeCandidates.delete(detail.id);
+                    }
+                }
+                updateActiveFromCandidates();
+            },
+            {
+                root: null,
+                threshold: 0,
+                // Shrink the root so intersections only happen in a thin band at the top.
+                // This keeps the activeCandidates set small even for huge documents.
+                rootMargin: '0px 0px -95% 0px'
+            }
+        );
+
+        mainSummaries.forEach(summary => summaryObserver.observe(summary));
+
         function highlightActiveLink() {
             const navLinks = document.querySelectorAll('.myAAAcontainer nav a');
             navLinks.forEach(link => link.classList.remove('active'));
 
-            const activeDetail = findActiveSection();
             if (activeDetail && activeDetail.id) {
                 const activeLink = findVisibleNavLink(activeDetail);
                 if (activeLink) activeLink.classList.add('active');
             }
         }
 
-        // Throttle scroll events using requestAnimationFrame
-        let ticking = false;
-        function onScroll() {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    highlightActiveLink();
-                    ticking = false;
-                });
-            }
-        }
-
-        // Listen to window scroll since the main element scrolls with the page
-        window.addEventListener('scroll', onScroll);
-
         // Listen for hash changes after scroll/highlight utilities are ready
         window.addEventListener('hashchange', handleHashChange);
 
         // Handle initial hash on page load
         handleHashChange();
-        highlightActiveLink();
+        // If there's no hash, set an initial active section once the observer has a chance to run.
+        window.requestAnimationFrame(() => updateActiveFromCandidates());
 
     });
 </script>
