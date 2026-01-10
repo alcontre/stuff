@@ -351,11 +351,25 @@
         box-shadow: var(--myAAA-focus);
     }
 
+    .myAAAcontainer main details summary {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
     .myAAAcontainer main details summary span {
         display: inline;
         margin: 0;
         padding: 0;
         font-weight: 650;
+        flex-grow: 1;
+    }
+
+    .myAAAcontainer main details summary .myAAAParentLink {
+        font-size: 0.85rem;
+        font-weight: 500;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     /* We use ::before rather than ::marker because confluence HTML Include
@@ -475,6 +489,28 @@
 
         // Number all sections first
         numberSections(mainElement);
+
+        // Add "Jump to parent" links to all summary elements
+        function addParentLinks() {
+            const allDetails = Array.from(mainElement.querySelectorAll('details'));
+            allDetails.forEach(detail => {
+                const summary = detail.querySelector(':scope > summary');
+                if (summary) {
+                    // Check if this detail has a parent details element
+                    let parentDetail = detail.parentElement ? detail.parentElement.closest('details') : null;
+                    if (parentDetail && parentDetail.id) {
+                        // Create the parent link
+                        const parentLink = document.createElement('a');
+                        parentLink.href = '#' + parentDetail.id;
+                        parentLink.textContent = 'Jump to parent';
+                        parentLink.className = 'myAAAParentLink';
+                        summary.appendChild(parentLink);
+                    }
+                }
+            });
+        }
+
+        addParentLinks();
 
         // Find all details elements in main and build nav
         function buildNav(parent, targetContainer) {
