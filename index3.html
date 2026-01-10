@@ -897,7 +897,8 @@
             </div>
         </nav>
 
-        <div class="myAAAresizeGutter" role="separator" aria-orientation="vertical" aria-label="Resize navigation"></div>
+        <div class="myAAAresizeGutter" role="separator" aria-orientation="vertical" aria-label="Resize navigation">
+        </div>
 
         <main>
             <div class="myAAAmainHeader">
@@ -914,29 +915,29 @@
                 <table class="myAAAFixedBitTable">
                     <thead>
                         <tr>
-                            <th>Word Index</th>
+                            <th colspan="4">Word Index</th>
                             <th>Bitfield</th>
                             <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Word 0</td>
+                            <td colspan="4">Word 0</td>
                             <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                             <td>Format sync + version + feature flags.</td>
                         </tr>
                         <tr>
-                            <td>Word 1</td>
+                            <td colspan="4">Word 1</td>
                             <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                             <td>Total header size in bytes; remainder reserved.</td>
                         </tr>
                         <tr>
-                            <td>Word 2</td>
+                            <td colspan="4">Word 2</td>
                             <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                             <td>Absolute byte offset to the chunk table.</td>
                         </tr>
                         <tr>
-                            <td>Word 3</td>
+                            <td colspan="4">Word 3</td>
                             <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                             <td>Number of chunk entries and the per-entry size.</td>
                         </tr>
@@ -951,6 +952,48 @@
                 <details open>
                     <summary><span>Version</span></summary>
                     <p>16-bit integer identifying schema revision.</p>
+                    <table class="myAAAFixedBitTable">
+                        <thead>
+                            <tr>
+                                <th colspan="4">Word Index</th>
+                                <th>Bitfield</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">Word 0</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>Format sync + version + feature flags.</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">Word 1</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>Total header size in bytes; remainder reserved.</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">Word 2</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>Absolute byte offset to the chunk table.</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">Word 3</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>Number of chunk entries and the per-entry size.</td>
+                            </tr>
+                            <tr>
+                                <td colspan="1" rowspan="2">X</td>
+                                <td colspan="3">Word 0</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>Number of chunk entries and the per-entry size.</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Word 1</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>Number of chunk entries and the per-entry size.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </details>
             </details>
 
