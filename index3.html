@@ -22,12 +22,21 @@
         --myAAA-accent: #2563eb;
         --myAAA-accent-weak: rgba(37, 99, 235, 0.10);
 
-        --myAAA-nav-bg: #0b1220;
-        --myAAA-nav-border: 1px solid rgba(255, 255, 255, 0.10);
-        --myAAA-nav-text: rgba(255, 255, 255, 0.92);
-        --myAAA-nav-muted: rgba(255, 255, 255, 0.70);
-        --myAAA-nav-link: rgba(255, 255, 255, 0.86);
-        --myAAA-nav-link-hover: #ffffff;
+        /* Nav inherits the same theme surfaces (not forced dark) */
+        --myAAA-nav-bg: var(--myAAA-surface);
+        --myAAA-nav-border: var(--myAAA-border);
+        --myAAA-nav-text: var(--myAAA-text);
+        --myAAA-nav-muted: var(--myAAA-muted);
+        --myAAA-nav-link: var(--myAAA-text);
+        --myAAA-nav-link-hover: var(--myAAA-text);
+        --myAAA-nav-hover-bg: rgba(15, 23, 42, 0.06);
+        --myAAA-nav-divider: rgba(15, 23, 42, 0.10);
+        --myAAA-nav-scroll-thumb: rgba(15, 23, 42, 0.18);
+        --myAAA-nav-scroll-thumb-hover: rgba(15, 23, 42, 0.28);
+        --myAAA-nav-btn-border: rgba(15, 23, 42, 0.14);
+        --myAAA-nav-btn-bg: rgba(15, 23, 42, 0.05);
+        --myAAA-nav-btn-bg-hover: rgba(15, 23, 42, 0.09);
+        --myAAA-nav-arrow: rgba(15, 23, 42, 0.60);
 
         --myAAA-danger: #ef4444;
         --myAAA-danger-weak: rgba(239, 68, 68, 0.14);
@@ -51,12 +60,21 @@
             --myAAA-accent: #60a5fa;
             --myAAA-accent-weak: rgba(96, 165, 250, 0.16);
 
-            --myAAA-nav-bg: #070b14;
-            --myAAA-nav-border: 1px solid rgba(255, 255, 255, 0.10);
+            --myAAA-nav-bg: var(--myAAA-surface);
+            --myAAA-nav-border: var(--myAAA-border);
             --myAAA-danger: #f87171;
             --myAAA-danger-weak: rgba(248, 113, 113, 0.18);
 
             --myAAA-focus: 0 0 0 4px rgba(96, 165, 250, 0.25);
+
+            --myAAA-nav-hover-bg: rgba(255, 255, 255, 0.08);
+            --myAAA-nav-divider: rgba(255, 255, 255, 0.10);
+            --myAAA-nav-scroll-thumb: rgba(255, 255, 255, 0.16);
+            --myAAA-nav-scroll-thumb-hover: rgba(255, 255, 255, 0.24);
+            --myAAA-nav-btn-border: rgba(255, 255, 255, 0.16);
+            --myAAA-nav-btn-bg: rgba(255, 255, 255, 0.08);
+            --myAAA-nav-btn-bg-hover: rgba(255, 255, 255, 0.14);
+            --myAAA-nav-arrow: rgba(255, 255, 255, 0.65);
         }
     }
 
@@ -167,14 +185,14 @@
     }
 
     .myAAAcontainer nav::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.14);
+        background: var(--myAAA-nav-scroll-thumb);
         border-radius: 999px;
         border: 2px solid transparent;
         background-clip: padding-box;
     }
 
     .myAAAcontainer nav::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.22);
+        background: var(--myAAA-nav-scroll-thumb-hover);
         border: 2px solid transparent;
         background-clip: padding-box;
     }
@@ -202,7 +220,7 @@
 
     .myAAAcontainer nav a:hover {
         color: var(--myAAA-nav-link-hover);
-        background: rgba(255, 255, 255, 0.07);
+        background: var(--myAAA-nav-hover-bg);
     }
 
     .myAAAcontainer main {
@@ -256,7 +274,7 @@
         gap: 0.75rem;
         padding-bottom: 0.5rem;
         margin-bottom: 0.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+        border-bottom: 1px solid var(--myAAA-nav-divider);
     }
 
     .myAAAcontainer button {
@@ -265,8 +283,8 @@
 
     .myAAAnavControls button {
         padding: 0.28rem 0.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--myAAA-nav-btn-border);
+        background: var(--myAAA-nav-btn-bg);
         color: var(--myAAA-nav-text);
         border-radius: 9px;
         cursor: pointer;
@@ -275,7 +293,7 @@
     }
 
     .myAAAnavControls button:hover {
-        background: rgba(255, 255, 255, 0.14);
+        background: var(--myAAA-nav-btn-bg-hover);
     }
 
     .myAAAmainControls button {
@@ -380,20 +398,30 @@
         color: var(--myAAA-nav-text);
     }
 
+    /* Ensure the disclosure arrow and text are vertically centered */
+    .myAAAcontainer nav details summary {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
     .myAAAcontainer nav a.active {
-        color: #ffffff;
+        color: var(--myAAA-nav-text);
         font-weight: 700;
         background: var(--myAAA-danger-weak);
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+        box-shadow: inset 0 0 0 1px var(--myAAA-nav-btn-border);
     }
 
     .myAAAcontainer nav details summary::before {
         content: '▶ ';
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         width: 1em;
         text-align: center;
         font-family: var(--myAAA-mono);
-        color: rgba(255, 255, 255, 0.65);
+        color: var(--myAAA-nav-arrow);
+        line-height: 1;
     }
 
     .myAAAcontainer nav details[open] > summary::before {
@@ -403,7 +431,7 @@
     /* Indentation for nested elements ("details") */
     .myAAAcontainer nav details > *:not(summary) {
         margin-left: 0.85rem;
-        border-left: 1px dashed rgba(255, 255, 255, 0.12);
+        border-left: 1px dashed var(--myAAA-nav-divider);
         padding-left: 0.5rem;
     }
 
