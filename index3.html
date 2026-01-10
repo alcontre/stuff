@@ -485,6 +485,16 @@
         color: var(--myAAA-muted);
     }
 
+    /* Style paragraphs inside the description so that
+    there is no margin for the first paragraph, but allow
+    a small margin between multiple paragraphs */
+    .myAAAFixedBitTable td>p {
+        margin: 0;
+    }
+    .myAAAFixedBitTable td>p+p {
+        margin-top: 0.25rem;
+    }
+
     .myAAAFixedBitTable td.myAAAVerticalLabel {
         text-align: center;
         vertical-align: middle;
@@ -981,7 +991,10 @@
                             <tr>
                                 <td colspan="4">Word 1</td>
                                 <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
-                                <td>Total header size in bytes; remainder reserved.</td>
+                                <td>
+                                    <p>Total header size in bytes; remainder reserved.</p>
+                                    <p>Total header size in bytes; remainder reserved.</p>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="4">Word 2</td>
@@ -994,7 +1007,8 @@
                                 <td>Number of chunk entries and the per-entry size.</td>
                             </tr>
                             <tr>
-                                <td colspan="1" rowspan="2" class="myAAAVerticalLabel"><span>My Very Long Label</span></td>
+                                <td colspan="1" rowspan="2" class="myAAAVerticalLabel"><span>My Very Long Label</span>
+                                </td>
                                 <td colspan="3">Word 0</td>
                                 <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                                 <td>Number of chunk entries and the per-entry size.</td>
