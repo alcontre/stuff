@@ -423,6 +423,7 @@
 
     .myAAAcontainer main table {
         width: 100%;
+        table-layout: fixed;
         border-collapse: separate;
         border-spacing: 0;
         font-family: var(--myAAA-mono);
@@ -461,6 +462,7 @@
         letter-spacing: 0.01em;
     }
 
+    .myAAAcontainer main th:nth-child(1),
     .myAAAcontainer main td:nth-child(1) {
         white-space: nowrap;
         width: 6em;
@@ -468,8 +470,12 @@
         font-weight: 700;
     }
 
+    .myAAAcontainer main th:nth-child(2),
     .myAAAcontainer main td:nth-child(2) {
         white-space: pre;
+        width: 41ch;
+        min-width: 41ch;
+        max-width: 41ch;
         color: var(--myAAA-text);
     }
 
@@ -910,22 +916,22 @@
                     <tbody>
                         <tr>
                             <td>Word 0</td>
-                            <td>|31..24|23..16|15..08|07..00|</td>
+                            <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                             <td>Format sync + version + feature flags.</td>
                         </tr>
                         <tr>
                             <td>Word 1</td>
-                            <td>|31.................16|15.................00|</td>
+                            <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                             <td>Total header size in bytes; remainder reserved.</td>
                         </tr>
                         <tr>
                             <td>Word 2</td>
-                            <td>|31.......................................00| </td>
+                            <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                             <td>Absolute byte offset to the chunk table.</td>
                         </tr>
                         <tr>
                             <td>Word 3</td>
-                            <td>|31.................16|15.................00| </td>
+                            <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                             <td>Number of chunk entries and the per-entry size.</td>
                         </tr>
                     </tbody>
