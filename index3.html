@@ -588,7 +588,7 @@
         // Scroll tracking to highlight active section in nav
         const mainDetails = Array.from(document.querySelectorAll('.myAAAcontainer main details'));
 
-        function isDetailVisible(detail) {
+        function isContentDetailVisible(detail) {
             if (!detail) return false;
             let current = detail.parentElement;
             while (current && current !== document.body) {
@@ -600,17 +600,43 @@
             return true;
         }
 
+        // Nav links can be inside <summary> (always visible) or inside the details body (hidden when closed).
+        function isNavLinkVisible(linkEl) {
+            if (!linkEl) return false;
+            let current = linkEl;
+            while (current && current !== document.body) {
+                if (current.tagName === 'DETAILS') {
+                    const summary = current.querySelector(':scope > summary');
+                    // If the original link lives in this <details>'s <summary>, this <details>'s open state
+                    // does not affect its visibility.
+                    if (!summary || !summary.contains(linkEl)) {
+                        if (!current.open) return false;
+                    }
+                }
+                current = current.parentElement;
+            }
+            return true;
+        }
+
         // Returns the first visible nav link by climbing the nav tree (not the content tree)
         function findVisibleNavLink(detail) {
             let currentLink = document.querySelector(`.myAAAcontainer nav a[href="#${detail.id}"]`);
             while (currentLink) {
-                if (isDetailVisible(currentLink)) {
+                if (isNavLinkVisible(currentLink)) {
                     return currentLink;
                 }
 
                 const currentDetails = currentLink.closest('details');
                 if (!currentDetails) break;
 
+                // First, try the current <details>' own summary link (the nearest parent section).
+                const currentSummaryLink = currentDetails.querySelector(':scope > summary a');
+                if (currentSummaryLink && currentSummaryLink !== currentLink) {
+                    currentLink = currentSummaryLink;
+                    continue;
+                }
+
+                // Otherwise climb to the next ancestor <details>.
                 const parentDetails = currentDetails.parentElement ? currentDetails.parentElement.closest('details') : null;
                 currentLink = parentDetails ? parentDetails.querySelector(':scope > summary a') : null;
             }
@@ -649,7 +675,7 @@
                     const detail = summaryEl.parentElement;
                     if (!detail || !detail.id) continue;
 
-                    if (entry.isIntersecting && isDetailVisible(detail)) {
+                    if (entry.isIntersecting && isContentDetailVisible(detail)) {
                         activeCandidates.set(detail.id, { detail, top: entry.boundingClientRect.top });
                     } else {
                         activeCandidates.delete(detail.id);
