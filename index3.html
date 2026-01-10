@@ -910,39 +910,23 @@
                     <tbody>
                         <tr>
                             <td>Word 0</td>
-                            <td>|31..24|23..16|15..08|07..00|
-| SYNC | MAJOR| MINOR| FLAGS|</td>
+                            <td>|31..24|23..16|15..08|07..00|</td>
                             <td>Format sync + version + feature flags.</td>
                         </tr>
                         <tr>
                             <td>Word 1</td>
-                            <td>|31.................16|15.................00|
-|   HEADER_BYTES        |      RESERVED       |</td>
+                            <td>|31.................16|15.................00|</td>
                             <td>Total header size in bytes; remainder reserved.</td>
                         </tr>
                         <tr>
                             <td>Word 2</td>
-                            <td>|31.......................................00|
-|           CHUNK_TABLE_OFFSET              |</td>
+                            <td>|31.......................................00| </td>
                             <td>Absolute byte offset to the chunk table.</td>
                         </tr>
                         <tr>
                             <td>Word 3</td>
-                            <td>|31.................16|15.................00|
-|    CHUNK_COUNT         |     ENTRY_BYTES    |</td>
+                            <td>|31.................16|15.................00| </td>
                             <td>Number of chunk entries and the per-entry size.</td>
-                        </tr>
-                        <tr>
-                            <td>Word 4</td>
-                            <td>|31.......................................00|
-|              PAYLOAD_OFFSET               |</td>
-                            <td>Absolute byte offset to payload start.</td>
-                        </tr>
-                        <tr>
-                            <td>Word 5</td>
-                            <td>|31.......................................00|
-|               HEADER_CRC32                |</td>
-                            <td>CRC32 of header words 0..4 (dummy example).</td>
                         </tr>
                     </tbody>
                 </table>
