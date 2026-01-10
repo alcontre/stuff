@@ -417,7 +417,7 @@
         line-height: 1.45;
     }
 
-    .myAAAcontainer main details>table {
+    .myAAAcontainer main details>table.myAAAFixedBitTable {
         margin-left: 0;
     }
 
@@ -425,7 +425,7 @@
         margin: 0.25rem 0;
     }
 
-    .myAAAcontainer main table {
+    .myAAAcontainer main table.myAAAFixedBitTable {
         width: 100%;
         table-layout: fixed;
         border-collapse: separate;
@@ -439,8 +439,8 @@
         margin: 0.5rem 0 0.2rem 0;
     }
 
-    .myAAAcontainer main th,
-    .myAAAcontainer main td {
+    .myAAAcontainer main table.myAAAFixedBitTable th,
+    .myAAAcontainer main table.myAAAFixedBitTable td {
         padding: 0.34rem 0.45rem;
         border: 0;
         border-right: var(--myAAA-border);
@@ -448,16 +448,16 @@
         vertical-align: top;
     }
 
-    .myAAAcontainer main th:last-child,
-    .myAAAcontainer main td:last-child {
+    .myAAAcontainer main table.myAAAFixedBitTable th:last-child,
+    .myAAAcontainer main table.myAAAFixedBitTable td:last-child {
         border-right: 0;
     }
 
-    .myAAAcontainer main tbody tr:last-child td {
+    .myAAAcontainer main table.myAAAFixedBitTable tbody tr:last-child td {
         border-bottom: 0;
     }
 
-    .myAAAcontainer main thead th {
+    .myAAAcontainer main table.myAAAFixedBitTable thead th {
         border-top: 0;
         background: var(--myAAA-surface-2);
         color: var(--myAAA-text);
@@ -466,8 +466,8 @@
         letter-spacing: 0.01em;
     }
 
-    .myAAAcontainer main th:nth-child(1),
-    .myAAAcontainer main td:nth-child(1) {
+    .myAAAcontainer main table.myAAAFixedBitTable th:nth-child(1),
+    .myAAAcontainer main table.myAAAFixedBitTable td:nth-child(1) {
         white-space: nowrap;
         width: 12ch;
         min-width: 12ch;
@@ -476,8 +476,8 @@
         font-weight: 700;
     }
 
-    .myAAAcontainer main th:nth-child(2),
-    .myAAAcontainer main td:nth-child(2) {
+    .myAAAcontainer main table.myAAAFixedBitTable th:nth-child(2),
+    .myAAAcontainer main table.myAAAFixedBitTable td:nth-child(2) {
         white-space: pre;
         width: 41ch;
         min-width: 41ch;
@@ -485,7 +485,7 @@
         color: var(--myAAA-text);
     }
 
-    .myAAAcontainer main td:nth-child(3) {
+    .myAAAcontainer main table.myAAAFixedBitTable td:nth-child(3) {
         color: var(--myAAA-muted);
     }
 
@@ -911,7 +911,7 @@
                 <summary><span>File Header</span></summary>
                 <p>The file header contains metadata about the binary format structure and version.</p>
 
-                <table>
+                <table class="myAAAFixedBitTable">
                     <thead>
                         <tr>
                             <th>Word Index</th>
