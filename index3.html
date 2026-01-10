@@ -489,6 +489,22 @@
         color: var(--myAAA-muted);
     }
 
+    .myAAAcontainer main table.myAAAFixedBitTable td.myAAAVerticalLabel {
+        text-align: center;
+        vertical-align: middle;
+        padding: 0.2rem 0.15rem;
+        color: var(--myAAA-text);
+    }
+
+    .myAAAcontainer main table.myAAAFixedBitTable td.myAAAVerticalLabel > span {
+        display: inline-block;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        transform: rotate(180deg);
+        white-space: nowrap;
+        line-height: 1;
+    }
+
     .myAAAcontainer nav details {
         margin: 0.16rem 0;
     }
@@ -982,7 +998,7 @@
                                 <td>Number of chunk entries and the per-entry size.</td>
                             </tr>
                             <tr>
-                                <td colspan="1" rowspan="2">X</td>
+                                <td colspan="1" rowspan="2" class="myAAAVerticalLabel"><span>My Very Long Label</span></td>
                                 <td colspan="3">Word 0</td>
                                 <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                                 <td>Number of chunk entries and the per-entry size.</td>
