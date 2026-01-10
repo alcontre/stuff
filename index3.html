@@ -85,8 +85,7 @@
             Confluence sets the active theme on the host page via <html data-color-mode="dark|light">.
             Standalone pages keep following prefers-color-scheme by default.
         */
-        html.myAAA-theme-light,
-        :root[data-color-mode="light"] {
+        html.myAAA-theme-light {
         color-scheme: light;
 
         --myAAA-bg: #f6f7fb;
@@ -123,8 +122,7 @@
         --myAAA-focus: 0 0 0 4px rgba(37, 99, 235, 0.25);
     }
 
-    html.myAAA-theme-dark,
-    :root[data-color-mode="dark"] {
+    html.myAAA-theme-dark {
         color-scheme: dark;
 
         --myAAA-bg: #070b14;
@@ -656,6 +654,42 @@
     }
 </style>
 <script>
+    (function () {
+        const THEME_LIGHT_CLASS = 'myAAA-theme-light';
+        const THEME_DARK_CLASS = 'myAAA-theme-dark';
+
+        function normalizeMode(value) {
+            if (!value) return null;
+            const v = String(value).trim().toLowerCase();
+            if (v === 'dark') return 'dark';
+            if (v === 'light') return 'light';
+            return null;
+        }
+
+        function applyMode(mode) {
+            const htmlEl = document.documentElement;
+            const shouldLight = mode === 'light';
+            const shouldDark = mode === 'dark';
+
+            htmlEl.classList.toggle(THEME_LIGHT_CLASS, shouldLight);
+            htmlEl.classList.toggle(THEME_DARK_CLASS, shouldDark);
+        }
+
+        function refreshFromConfluence() {
+            const mode = normalizeMode(document.documentElement.getAttribute('data-color-mode'));
+            // If Confluence isn't present, keep standalone behavior (no forced class)
+            applyMode(mode);
+        }
+
+        refreshFromConfluence();
+
+        const observer = new MutationObserver(refreshFromConfluence);
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-color-mode'],
+        });
+    })();
+
     document.addEventListener('DOMContentLoaded', function () {
         const mainElement = document.querySelector('.myAAAcontainer main');
 
