@@ -527,6 +527,11 @@
         margin-top: 0.25rem;
     }
 
+    /* Mark unimplemented fields in the Description column */
+    .myAAAFixedBitTable td > p.myAAAUnimplemented {
+        color: var(--myAAA-danger);
+    }
+
     .myAAAFixedBitTable td.myAAAVerticalLabel {
         text-align: center;
         vertical-align: middle;
@@ -1038,7 +1043,7 @@
                                 <td colspan="4">Word 1</td>
                                 <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
                                 <td>
-                                    <p>Total header size in bytes; remainder reserved.</p>
+                                    <p class="myAAAUnimplemented">Total header size in bytes; remainder reserved.</p>
                                     <p>Total header size in bytes; remainder reserved.</p>
                                 </td>
                             </tr>
