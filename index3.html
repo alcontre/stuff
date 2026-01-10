@@ -8,21 +8,26 @@
 
         --myAAA-radius: 12px;
         --myAAA-radius-sm: 10px;
-        --myAAA-border: 1px solid rgba(0, 0, 0, 0.10);
+        --myAAA-border: 1px solid var(--ds-border, rgba(0, 0, 0, 0.10));
         --myAAA-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         --myAAA-shadow-sm: 0 6px 16px rgba(0, 0, 0, 0.10);
 
         --myAAA-nav-width: 250px;
 
-        --myAAA-bg: #f6f7fb;
-        --myAAA-surface: #ffffff;
-        --myAAA-surface-2: #f2f4f8;
-        --myAAA-text: #0f172a;
-        --myAAA-muted: rgba(15, 23, 42, 0.72);
-        --myAAA-link: #2563eb;
-        --myAAA-link-hover: #1d4ed8;
-        --myAAA-accent: #2563eb;
-        --myAAA-accent-weak: rgba(37, 99, 235, 0.10);
+                /*
+                    Confluence (Atlassian) design tokens are present when embedded.
+                    Using them (with fallbacks) makes this automatically follow Confluence theme.
+                    Standalone viewing keeps the fallbacks + prefers-color-scheme.
+                */
+                --myAAA-bg: var(--ds-surface, #f6f7fb);
+                --myAAA-surface: var(--ds-surface-raised, #ffffff);
+                --myAAA-surface-2: var(--ds-surface-sunken, #f2f4f8);
+                --myAAA-text: var(--ds-text, #0f172a);
+                --myAAA-muted: var(--ds-text-subtle, rgba(15, 23, 42, 0.72));
+                --myAAA-link: var(--ds-link, #2563eb);
+                --myAAA-link-hover: var(--ds-link-pressed, #1d4ed8);
+                --myAAA-accent: var(--ds-link, #2563eb);
+                --myAAA-accent-weak: var(--ds-background-brand-subtlest, rgba(37, 99, 235, 0.10));
 
         /* Nav inherits the same theme surfaces (not forced dark) */
         --myAAA-nav-bg: var(--myAAA-surface);
@@ -31,14 +36,14 @@
         --myAAA-nav-muted: var(--myAAA-muted);
         --myAAA-nav-link: var(--myAAA-text);
         --myAAA-nav-link-hover: var(--myAAA-text);
-        --myAAA-nav-hover-bg: rgba(15, 23, 42, 0.06);
-        --myAAA-nav-divider: rgba(15, 23, 42, 0.10);
-        --myAAA-nav-scroll-thumb: rgba(15, 23, 42, 0.18);
-        --myAAA-nav-scroll-thumb-hover: rgba(15, 23, 42, 0.28);
-        --myAAA-nav-btn-border: rgba(15, 23, 42, 0.14);
-        --myAAA-nav-btn-bg: rgba(15, 23, 42, 0.05);
-        --myAAA-nav-btn-bg-hover: rgba(15, 23, 42, 0.09);
-        --myAAA-nav-arrow: rgba(15, 23, 42, 0.60);
+        --myAAA-nav-hover-bg: var(--ds-background-neutral-subtle-hovered, rgba(15, 23, 42, 0.06));
+        --myAAA-nav-divider: var(--ds-border, rgba(15, 23, 42, 0.10));
+        --myAAA-nav-scroll-thumb: var(--ds-background-neutral-bold, rgba(15, 23, 42, 0.18));
+        --myAAA-nav-scroll-thumb-hover: var(--ds-background-neutral-bold-hovered, rgba(15, 23, 42, 0.28));
+        --myAAA-nav-btn-border: var(--ds-border, rgba(15, 23, 42, 0.14));
+        --myAAA-nav-btn-bg: var(--ds-background-neutral-subtle, rgba(15, 23, 42, 0.05));
+        --myAAA-nav-btn-bg-hover: var(--ds-background-neutral-subtle-hovered, rgba(15, 23, 42, 0.09));
+        --myAAA-nav-arrow: var(--ds-text-subtle, rgba(15, 23, 42, 0.60));
 
         --myAAA-danger: #ef4444;
         --myAAA-danger-weak: rgba(239, 68, 68, 0.14);
@@ -48,19 +53,19 @@
 
     @media (prefers-color-scheme: dark) {
         :root {
-            --myAAA-bg: #070b14;
-            --myAAA-surface: #0b1220;
-            --myAAA-surface-2: #0f172a;
-            --myAAA-text: rgba(255, 255, 255, 0.92);
-            --myAAA-muted: rgba(255, 255, 255, 0.72);
-            --myAAA-border: 1px solid rgba(255, 255, 255, 0.10);
+            --myAAA-bg: var(--ds-surface, #070b14);
+            --myAAA-surface: var(--ds-surface-raised, #0b1220);
+            --myAAA-surface-2: var(--ds-surface-sunken, #0f172a);
+            --myAAA-text: var(--ds-text, rgba(255, 255, 255, 0.92));
+            --myAAA-muted: var(--ds-text-subtle, rgba(255, 255, 255, 0.72));
+            --myAAA-border: 1px solid var(--ds-border, rgba(255, 255, 255, 0.10));
             --myAAA-shadow: 0 10px 30px rgba(0, 0, 0, 0.50);
             --myAAA-shadow-sm: 0 6px 16px rgba(0, 0, 0, 0.55);
 
-            --myAAA-link: #60a5fa;
-            --myAAA-link-hover: #93c5fd;
-            --myAAA-accent: #60a5fa;
-            --myAAA-accent-weak: rgba(96, 165, 250, 0.16);
+            --myAAA-link: var(--ds-link, #60a5fa);
+            --myAAA-link-hover: var(--ds-link-pressed, #93c5fd);
+            --myAAA-accent: var(--ds-link, #60a5fa);
+            --myAAA-accent-weak: var(--ds-background-brand-subtlest, rgba(96, 165, 250, 0.16));
 
             --myAAA-nav-bg: var(--myAAA-surface);
             --myAAA-nav-border: var(--myAAA-border);
@@ -69,90 +74,15 @@
 
             --myAAA-focus: 0 0 0 4px rgba(96, 165, 250, 0.25);
 
-            --myAAA-nav-hover-bg: rgba(255, 255, 255, 0.08);
-            --myAAA-nav-divider: rgba(255, 255, 255, 0.10);
-            --myAAA-nav-scroll-thumb: rgba(255, 255, 255, 0.16);
-            --myAAA-nav-scroll-thumb-hover: rgba(255, 255, 255, 0.24);
-            --myAAA-nav-btn-border: rgba(255, 255, 255, 0.16);
-            --myAAA-nav-btn-bg: rgba(255, 255, 255, 0.08);
-            --myAAA-nav-btn-bg-hover: rgba(255, 255, 255, 0.14);
-            --myAAA-nav-arrow: rgba(255, 255, 255, 0.65);
+            --myAAA-nav-hover-bg: var(--ds-background-neutral-subtle-hovered, rgba(255, 255, 255, 0.08));
+            --myAAA-nav-divider: var(--ds-border, rgba(255, 255, 255, 0.10));
+            --myAAA-nav-scroll-thumb: var(--ds-background-neutral-bold, rgba(255, 255, 255, 0.16));
+            --myAAA-nav-scroll-thumb-hover: var(--ds-background-neutral-bold-hovered, rgba(255, 255, 255, 0.24));
+            --myAAA-nav-btn-border: var(--ds-border, rgba(255, 255, 255, 0.16));
+            --myAAA-nav-btn-bg: var(--ds-background-neutral-subtle, rgba(255, 255, 255, 0.08));
+            --myAAA-nav-btn-bg-hover: var(--ds-background-neutral-subtle-hovered, rgba(255, 255, 255, 0.14));
+            --myAAA-nav-arrow: var(--ds-text-subtle, rgba(255, 255, 255, 0.65));
         }
-    }
-
-        /*
-            Theme override for embedding in Confluence.
-            Confluence sets the active theme on the host page via <html data-color-mode="dark|light">.
-            Standalone pages keep following prefers-color-scheme by default.
-        */
-        html.myAAA-theme-light {
-        color-scheme: light;
-
-        --myAAA-bg: #f6f7fb;
-        --myAAA-surface: #ffffff;
-        --myAAA-surface-2: #f2f4f8;
-        --myAAA-text: #0f172a;
-        --myAAA-muted: rgba(15, 23, 42, 0.72);
-        --myAAA-border: 1px solid rgba(0, 0, 0, 0.10);
-        --myAAA-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        --myAAA-shadow-sm: 0 6px 16px rgba(0, 0, 0, 0.10);
-
-        --myAAA-link: #2563eb;
-        --myAAA-link-hover: #1d4ed8;
-        --myAAA-accent: #2563eb;
-        --myAAA-accent-weak: rgba(37, 99, 235, 0.10);
-
-        --myAAA-nav-bg: var(--myAAA-surface);
-        --myAAA-nav-border: var(--myAAA-border);
-        --myAAA-nav-text: var(--myAAA-text);
-        --myAAA-nav-muted: var(--myAAA-muted);
-        --myAAA-nav-link: var(--myAAA-text);
-        --myAAA-nav-link-hover: var(--myAAA-text);
-        --myAAA-nav-hover-bg: rgba(15, 23, 42, 0.06);
-        --myAAA-nav-divider: rgba(15, 23, 42, 0.10);
-        --myAAA-nav-scroll-thumb: rgba(15, 23, 42, 0.18);
-        --myAAA-nav-scroll-thumb-hover: rgba(15, 23, 42, 0.28);
-        --myAAA-nav-btn-border: rgba(15, 23, 42, 0.14);
-        --myAAA-nav-btn-bg: rgba(15, 23, 42, 0.05);
-        --myAAA-nav-btn-bg-hover: rgba(15, 23, 42, 0.09);
-        --myAAA-nav-arrow: rgba(15, 23, 42, 0.60);
-
-        --myAAA-danger: #ef4444;
-        --myAAA-danger-weak: rgba(239, 68, 68, 0.14);
-        --myAAA-focus: 0 0 0 4px rgba(37, 99, 235, 0.25);
-    }
-
-    html.myAAA-theme-dark {
-        color-scheme: dark;
-
-        --myAAA-bg: #070b14;
-        --myAAA-surface: #0b1220;
-        --myAAA-surface-2: #0f172a;
-        --myAAA-text: rgba(255, 255, 255, 0.92);
-        --myAAA-muted: rgba(255, 255, 255, 0.72);
-        --myAAA-border: 1px solid rgba(255, 255, 255, 0.10);
-        --myAAA-shadow: 0 10px 30px rgba(0, 0, 0, 0.50);
-        --myAAA-shadow-sm: 0 6px 16px rgba(0, 0, 0, 0.55);
-
-        --myAAA-link: #60a5fa;
-        --myAAA-link-hover: #93c5fd;
-        --myAAA-accent: #60a5fa;
-        --myAAA-accent-weak: rgba(96, 165, 250, 0.16);
-
-        --myAAA-nav-bg: var(--myAAA-surface);
-        --myAAA-nav-border: var(--myAAA-border);
-        --myAAA-danger: #f87171;
-        --myAAA-danger-weak: rgba(248, 113, 113, 0.18);
-        --myAAA-focus: 0 0 0 4px rgba(96, 165, 250, 0.25);
-
-        --myAAA-nav-hover-bg: rgba(255, 255, 255, 0.08);
-        --myAAA-nav-divider: rgba(255, 255, 255, 0.10);
-        --myAAA-nav-scroll-thumb: rgba(255, 255, 255, 0.16);
-        --myAAA-nav-scroll-thumb-hover: rgba(255, 255, 255, 0.24);
-        --myAAA-nav-btn-border: rgba(255, 255, 255, 0.16);
-        --myAAA-nav-btn-bg: rgba(255, 255, 255, 0.08);
-        --myAAA-nav-btn-bg-hover: rgba(255, 255, 255, 0.14);
-        --myAAA-nav-arrow: rgba(255, 255, 255, 0.65);
     }
 
     html,
@@ -654,42 +584,6 @@
     }
 </style>
 <script>
-    (function () {
-        const THEME_LIGHT_CLASS = 'myAAA-theme-light';
-        const THEME_DARK_CLASS = 'myAAA-theme-dark';
-
-        function normalizeMode(value) {
-            if (!value) return null;
-            const v = String(value).trim().toLowerCase();
-            if (v === 'dark') return 'dark';
-            if (v === 'light') return 'light';
-            return null;
-        }
-
-        function applyMode(mode) {
-            const htmlEl = document.documentElement;
-            const shouldLight = mode === 'light';
-            const shouldDark = mode === 'dark';
-
-            htmlEl.classList.toggle(THEME_LIGHT_CLASS, shouldLight);
-            htmlEl.classList.toggle(THEME_DARK_CLASS, shouldDark);
-        }
-
-        function refreshFromConfluence() {
-            const mode = normalizeMode(document.documentElement.getAttribute('data-color-mode'));
-            // If Confluence isn't present, keep standalone behavior (no forced class)
-            applyMode(mode);
-        }
-
-        refreshFromConfluence();
-
-        const observer = new MutationObserver(refreshFromConfluence);
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['data-color-mode'],
-        });
-    })();
-
     document.addEventListener('DOMContentLoaded', function () {
         const mainElement = document.querySelector('.myAAAcontainer main');
 
