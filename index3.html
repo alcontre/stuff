@@ -12,6 +12,8 @@
         --myAAA-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         --myAAA-shadow-sm: 0 6px 16px rgba(0, 0, 0, 0.10);
 
+        --myAAA-nav-width: 250px;
+
         --myAAA-bg: #f6f7fb;
         --myAAA-surface: #ffffff;
         --myAAA-surface-2: #f2f4f8;
@@ -100,7 +102,7 @@
 
     .myAAAcontainer {
         display: grid;
-        grid-template-columns: 250px minmax(0, 1fr);
+        grid-template-columns: var(--myAAA-nav-width) 8px minmax(0, 1fr);
         align-items: start;
         min-height: 100vh;
         width: 100%;
@@ -151,7 +153,7 @@
         background: var(--myAAA-surface-2);
     }
 
-    #myAAANavToggle:focus-visible + .myAAANavToggleLabel {
+    #myAAANavToggle:focus-visible+.myAAANavToggleLabel {
         outline: none;
         box-shadow: var(--myAAA-shadow-sm), var(--myAAA-focus);
     }
@@ -160,11 +162,11 @@
         display: none;
     }
 
-    #myAAANavToggle:checked + .myAAANavToggleLabel .myAAAHideLabel {
+    #myAAANavToggle:checked+.myAAANavToggleLabel .myAAAHideLabel {
         display: none;
     }
 
-    #myAAANavToggle:checked + .myAAANavToggleLabel .myAAAShowLabel {
+    #myAAANavToggle:checked+.myAAANavToggleLabel .myAAAShowLabel {
         display: inline;
     }
 
@@ -176,8 +178,24 @@
         overflow-y: auto;
         background: var(--myAAA-nav-bg);
         color: var(--myAAA-nav-text);
-        border-right: var(--myAAA-nav-border);
         transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .myAAAresizeGutter {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        cursor: ew-resize;
+        background: var(--myAAA-nav-bg);
+        border-right: var(--myAAA-nav-border);
+        z-index: 10;
+        transition: background 0.2s ease;
+        user-select: none;
+    }
+
+    .myAAAresizeGutter:hover,
+    .myAAAresizeGutter.active {
+        background: var(--myAAA-accent);
     }
 
     .myAAAcontainer nav::-webkit-scrollbar {
@@ -230,17 +248,23 @@
     }
 
     /* Collapse nav when toggled off */
-    #myAAANavToggle:checked ~ .myAAAcontainer {
-        grid-template-columns: 0 minmax(0, 1fr);
+    #myAAANavToggle:checked~.myAAAcontainer {
+        grid-template-columns: 0 0 minmax(0, 1fr);
     }
 
-    #myAAANavToggle:checked ~ .myAAAcontainer nav {
+    #myAAANavToggle:checked~.myAAAcontainer nav {
         transform: translateX(-100%);
         opacity: 0;
         pointer-events: none;
     }
 
-    #myAAANavToggle:checked ~ .myAAAcontainer main {
+    #myAAANavToggle:checked~.myAAAcontainer .myAAAresizeGutter {
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    #myAAANavToggle:checked~.myAAAcontainer main {
         padding-left: 1.1rem;
     }
 
@@ -338,7 +362,7 @@
         user-select: none;
     }
 
-    .myAAAcontainer main details[open] > summary {
+    .myAAAcontainer main details[open]>summary {
         background: var(--myAAA-accent-weak);
     }
 
@@ -383,11 +407,11 @@
         color: var(--myAAA-muted);
     }
 
-    .myAAAcontainer main details[open] > summary::before {
+    .myAAAcontainer main details[open]>summary::before {
         content: '▼ ';
     }
 
-    .myAAAcontainer main details > *:not(summary) {
+    .myAAAcontainer main details>*:not(summary) {
         margin-left: 0.95rem;
         color: var(--myAAA-muted);
         line-height: 1.55;
@@ -432,18 +456,20 @@
         align-items: center;
         justify-content: center;
         width: 1em;
+        min-width: 1em;
         text-align: center;
         font-family: var(--myAAA-mono);
         color: var(--myAAA-nav-arrow);
         line-height: 1;
+        flex-shrink: 0;
     }
 
-    .myAAAcontainer nav details[open] > summary::before {
+    .myAAAcontainer nav details[open]>summary::before {
         content: '▼ ';
     }
 
     /* Indentation for nested elements ("details") */
-    .myAAAcontainer nav details > *:not(summary) {
+    .myAAAcontainer nav details>*:not(summary) {
         margin-left: 0.5em;
         border-left: 1px dashed var(--myAAA-nav-divider);
         padding-left: 0.5rem;
@@ -748,6 +774,42 @@
         // If there's no hash, set an initial active section once the observer has a chance to run.
         window.requestAnimationFrame(() => updateActiveFromCandidates());
 
+        // Add resize functionality (gutter lives outside the scrollable nav)
+        const resizeGutter = document.querySelector('.myAAAresizeGutter');
+
+        let isResizing = false;
+        let startX = 0;
+        let startWidth = 0;
+
+        if (resizeGutter) resizeGutter.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            startX = e.clientX;
+            const raw = getComputedStyle(document.documentElement).getPropertyValue('--myAAA-nav-width');
+            const parsed = parseFloat(raw);
+            startWidth = Number.isFinite(parsed) ? parsed : navElement.getBoundingClientRect().width;
+            resizeGutter.classList.add('active');
+            document.body.style.cursor = 'ew-resize';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+
+            const deltaX = e.clientX - startX;
+            const newWidth = Math.max(150, Math.min(600, startWidth + deltaX));
+            document.documentElement.style.setProperty('--myAAA-nav-width', `${newWidth}px`);
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                if (resizeGutter) resizeGutter.classList.remove('active');
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+
     });
 </script>
 <div class="myAAAouter">
@@ -757,105 +819,115 @@
         <span class="myAAAShowLabel">Show nav</span>
     </label>
     <div class="myAAAcontainer">
-    <nav aria-label="Navigation">
-        <div class="myAAAnavHeader">
-            <h2>Navigation</h2>
-            <div class="myAAAnavControls">
-                <button type="button" id="myAAAExpandAll">+</button>
-                <button type="button" id="myAAACollapseAll">-</button>
+        <nav aria-label="Navigation">
+            <div class="myAAAnavHeader">
+                <h2>Navigation</h2>
+                <div class="myAAAnavControls">
+                    <button type="button" id="myAAAExpandAll">+</button>
+                    <button type="button" id="myAAACollapseAll">-</button>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <main>
-        <div class="myAAAmainHeader">
-            <h1>Binary Data Format Description</h1>
-            <div class="myAAAmainControls">
-                <button type="button" id="myAAAMainExpandAll">Expand all</button>
-                <button type="button" id="myAAAMainCollapseAll">Collapse all</button>
+        <div class="myAAAresizeGutter" role="separator" aria-orientation="vertical" aria-label="Resize navigation"></div>
+
+        <main>
+            <div class="myAAAmainHeader">
+                <h1>Binary Data Format Description</h1>
+                <div class="myAAAmainControls">
+                    <button type="button" id="myAAAMainExpandAll">Expand all</button>
+                    <button type="button" id="myAAAMainCollapseAll">Collapse all</button>
+                </div>
             </div>
-        </div>
-        <details open>
-            <summary><span>File Header</span></summary>
-            <p>The file header contains metadata about the binary format structure and version.</p>
-
             <details open>
-                <summary><span>Signature</span></summary>
-                <p>Magic bytes indicating format identity.</p>
-            </details>
-
-            <details open>
-                <summary><span>Version</span></summary>
-                <p>16-bit integer identifying schema revision.</p>
-            </details>
-        </details>
-
-        <details open>
-            <summary><span>Chunk Table</span></summary>
-            <p>The chunk table provides an index of all data chunks within the file.</p>
-
-            <details open>
-                <summary><span>Chunk Entry</span></summary>
-                <p>Repeated entries describing each payload chunk.</p>
+                <summary><span>File Header</span></summary>
+                <p>The file header contains metadata about the binary format structure and version.</p>
 
                 <details open>
-                    <summary><span>Chunk Type</span></summary>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
-                    <p>Enumerated value describing purpose.</p>
+                    <summary><span>Signature</span></summary>
+                    <p>Magic bytes indicating format identity.</p>
                 </details>
 
                 <details open>
-                    <summary><span>Chunk Offset</span></summary>
-                    <p>32-bit offset from file start.</p>
+                    <summary><span>Version</span></summary>
+                    <p>16-bit integer identifying schema revision.</p>
                 </details>
-
-                <details open>
-                    <summary><span>Chunk Size</span></summary>
-                    <p>32-bit length in bytes.</p>
-                </details>
-            </details>
-        </details>
-
-        <details open>
-            <summary><span>Payload</span></summary>
-            <p>The payload section contains the actual data content organized into structured blocks.</p>
-
-            <details open>
-                <summary><span>Metadata Block</span></summary>
-                <p>Optional key/value pairs with UTF-8 strings.</p>
             </details>
 
             <details open>
-                <summary><span>Data Block</span></summary>
-                <p>One or more records of the primary content.</p>
+                <summary><span>Chunk Table</span></summary>
+                <p>The chunk table provides an index of all data chunks within the file.</p>
 
                 <details open>
-                    <summary><span>Record Header</span></summary>
-                    <p>Flags and length for each record.</p>
-                </details>
+                    <summary><span>Chunk Entry</span></summary>
+                    <p>Repeated entries describing each payload chunk.</p>
 
-                <details open>
-                    <summary><span>Record Body</span></summary>
-                    <p>Raw bytes interpreted per chunk type.</p>
+                    <details open>
+                        <summary><span>Chunk Type</span></summary>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                        <p>Enumerated value describing purpose.</p>
+                    </details>
+
+                    <details open>
+                        <summary><span>Chunk Offset</span></summary>
+                        <p>32-bit offset from file start.</p>
+                        <details open>
+                            <summary><span>Chunk Offset</span></summary>
+                            <p>32-bit offset from file start.</p>
+                            <details open>
+                                <summary><span>Chunk Offset</span></summary>
+                                <p>32-bit offset from file start.</p>
+                            </details>
+                        </details>
+                    </details>
+
+                    <details open>
+                        <summary><span>Chunk Size</span></summary>
+                        <p>32-bit length in bytes.</p>
+                    </details>
                 </details>
             </details>
-        </details>
-    </main>
+
+            <details open>
+                <summary><span>Payload</span></summary>
+                <p>The payload section contains the actual data content organized into structured blocks.</p>
+
+                <details open>
+                    <summary><span>Metadata Block</span></summary>
+                    <p>Optional key/value pairs with UTF-8 strings.</p>
+                </details>
+
+                <details open>
+                    <summary><span>Data Block</span></summary>
+                    <p>One or more records of the primary content.</p>
+
+                    <details open>
+                        <summary><span>Record Header</span></summary>
+                        <p>Flags and length for each record.</p>
+                    </details>
+
+                    <details open>
+                        <summary><span>Record Body</span></summary>
+                        <p>Raw bytes interpreted per chunk type.</p>
+                    </details>
+                </details>
+            </details>
+        </main>
     </div>
 </div>
