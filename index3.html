@@ -458,7 +458,7 @@
 
     .myAAAFixedBitTable {
         width: 100%;
-        table-layout: fixed;
+        table-layout: auto;
         border-collapse: separate;
         border-spacing: 0;
         font-family: var(--myAAA-mono);
@@ -541,6 +541,15 @@
         transform: rotate(180deg);
         white-space: nowrap;
         line-height: 1;
+    }
+
+    /* Keep the Word Index area compact by default. */
+    .myAAAFixedBitTable thead th:first-child {
+        width: 1%;
+    }
+
+    .myAAAFixedBitTable td.myAAAVerticalLabel {
+        width: 1.7em;
     }
 
     .myAAAcontainer nav details {
@@ -1011,6 +1020,47 @@
                 <details open>
                     <summary><span>Signature</span></summary>
                     <p>Magic bytes indicating format identity.</p>
+                    <table class="myAAAFixedBitTable">
+                        <thead>
+                            <tr>
+                                <th colspan="4">Word Index</th>
+                                <th>Bitfield</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">Word 0</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>Format sync + version + feature flags.</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">Word 1</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>
+                                    <p>Total header size in bytes; remainder reserved.</p>
+                                    <p>Total header size in bytes; remainder reserved.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">Word 2</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>Absolute byte offset to the chunk table.</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">Word 3</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>Number of chunk entries and the per-entry size.</td>
+                            </tr>
+                            <tr>
+                                <td colspan="1" rowspan="1" class="myAAAVerticalLabel"><span>My Very Long Label</span>
+                                </td>
+                                <td colspan="3">Word AA</td>
+                                <td>XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX</td>
+                                <td>Number of chunk entries and the per-entry size.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </details>
 
                 <details open>
